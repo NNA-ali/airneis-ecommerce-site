@@ -1,0 +1,38 @@
+# Dossiers
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Fichiers
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.bak
+*.log
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.bak
+*.log
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.bak
+*.log
+
+# Fichiers de configuration spécifiques à l'IDE
+.vscode/
+.idea/
+
+# Ignorer les fichiers de base de données SQLite (si utilisé)
+*.sqlite3
+
+# Ignorer les fichiers de médias et statiques
+media/
+static/
