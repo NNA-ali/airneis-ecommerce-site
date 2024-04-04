@@ -103,13 +103,17 @@ function Products() {
   try {
     const response = await apiInstance.post(`cart-view/`, formdata);
     console.log(response.data);
+
+     Swal.fire({
+      icon:"success",
+      title: response.data.message
+    })
     // Afficher un message de succès ou rediriger l'utilisateur vers une autre page
   } catch (error) {
     console.error('Erreur lors de l\'ajout du produit au panier:', error);
     // Afficher un message d'erreur à l'utilisateur
   }
-  
-  Toast.fire
+
 
     }
 

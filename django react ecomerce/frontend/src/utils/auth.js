@@ -54,7 +54,10 @@ export const register = async (full_name, email, phone, password, password2)=> {
 
        await login(email, password)
        // Alert - signed up succefully
-
+       Toast.fire({
+        icon:"succes",
+        title:"Account created Successfully"
+    })
        return { data, error: null }
     }catch (error){
         console.log(error.message);
