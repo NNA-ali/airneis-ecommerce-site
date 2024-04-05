@@ -101,7 +101,7 @@ function ProductDetail() {
     }
 
     const handleAddToCart = async (product_id, price, shipping_amount) => {
-        const formdata = new FormData ()
+        const formdata = new FormData ()  
         formdata.append("product_id",product_id)
         formdata.append("user_id",userData?.user_id)
         formdata.append("qty",qtyValue)
@@ -111,9 +111,23 @@ function ProductDetail() {
         formdata.append("size",sizeValue)
         formdata.append("color",colorValue)
         formdata.append("cart_id",cart_id)
+        console.log(formdata)
+        
+    try {
+      const response = await apiInstance.post(`cart-view/`, formdata);
+      console.log(response.data);
   
-        const response = await apiInstance.post(`cart-view/`, formdata)
-        console.log(response.data);
+       Swal.fire({
+        icon:"success",
+        title: response.data.message
+      })
+      // Afficher un message de succès ou rediriger l'utilisateur vers une autre page
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du produit au panier:', error);
+      // Afficher un message d'erreur à l'utilisateur
+    }
+  
+  
       }
 
     const handleAddToWishlist = () => {
@@ -374,29 +388,17 @@ function ProductDetail() {
                                                     <div></div>
                                                 )}
                                             </div>
-                                            <button onClick={handleAddToCart} type="button" className="btn btn-primary btn-rounded me-2 add-to-cart" >
-                                                {isAddingToCart === "Add To Cart" &&
-                                                    <i className="fas fa-cart-plus me-2" />
-                                                }
-
-                                                {isAddingToCart === "Processing..." &&
-                                                    <i className="fas fa-spinner fa-spin me-2" />
-                                                }
-
-                                                {isAddingToCart === "Added To Cart" &&
-                                                    <i className="fas fa-check-circle me-2" />
-                                                }
-
-                                                {isAddingToCart === "An Error Occured" &&
-                                                    <i className="fas fa-check-circle me-2" />
-                                                }
-
-                                                {isAddingToCart}
-                                            </button>
-                                            {wishlistLoading === true &&
-                                                <button onClick={handleAddToWishlist} className="btn btn-danger btn-floating" data-mdb-toggle="tooltip" title="Add to wishlist" >
-                                                    <i className="fas fa-heart" />
-                                                </button>
+                                            <button
+                        type="button"
+                        className="btn btn-primary me-1 mb-1"
+                        onClick={() => handleAddToCart(product.id, product.price, product.shipping_amount)}
+                      >
+                        <i className="fas fa-shopping-cart" />
+                      </button>
+                          {wishlistLoading === true &&
+                            <button onClick={handleAddToWishlist} className="btn btn-danger btn-floating" data-mdb-toggle="tooltip" title="Add to wishlist" >
+                             <i className="fas fa-heart" />
+                           </button>
                                             }
                                             {wishlistLoading === false &&
                                                 <button onClick={handleAddToWishlist} className="btn btn-secondary btn-floating" data-mdb-toggle="tooltip" title="Add to wishlist" >
