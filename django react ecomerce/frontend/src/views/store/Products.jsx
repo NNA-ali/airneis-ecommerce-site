@@ -47,16 +47,18 @@ function Products() {
 
     }
 
-    const handleSizeButtonClick = (event, product_id, size) => {
-
-      setSizeValue(size)
+   const handleSizeButtonClick = (event, product_id, size) => {
+      const formattedSize = `${size.length} x ${size.width}`;   
+      setSizeValue(formattedSize)
       setSelectedProduct(product_id)
 
-      setSelectedSize((prevSelectedSizeName) => ({
-        ...prevSelectedSizeName,
+      setSelectedSize((prevSelectedSize) => ({
+        ...prevSelectedSize,
         [product_id]: size
+        
       }))  
-      console.log(sizeName);
+      console.log(formattedSize)
+      
             
     }
 

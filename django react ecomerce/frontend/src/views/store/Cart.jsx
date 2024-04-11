@@ -95,7 +95,7 @@ function Cart() {
                         <span>{c.size}</span>
                       </p>
                       }
-                      {c.size !== "no Color" && 
+                      {c.color !== "no Color" && 
                       <p className='mb-0'>
                         <span className="text-muted me-2">Color:</span>
                         <span>{c.color}</span>
