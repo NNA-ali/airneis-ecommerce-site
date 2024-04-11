@@ -52,10 +52,11 @@ function Products() {
       setSizeValue(size)
       setSelectedProduct(product_id)
 
-      setSelectedSize((prevSelectedSize) => ({
-        ...prevSelectedSize,
+      setSelectedSize((prevSelectedSizeName) => ({
+        ...prevSelectedSizeName,
         [product_id]: size
-      }))
+      }))  
+      console.log(sizeName);
             
     }
 

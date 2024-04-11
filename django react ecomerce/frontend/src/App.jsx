@@ -11,6 +11,8 @@ import StoreHeader from './views/auth/Base/StoreHeader'
 import MainWrapper from './layout/MainWrapper'
 import Products from './views/store/Products'
 import ProductDetail from './views/store/ProductDetail'
+import { CartContext } from './views/plugin/Context'
+import Cart from './views/store/cart'
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
         {/* Store components  */}
         <Route path='/' element={<Products />} />
         <Route path='/detail/:slug/' element={<ProductDetail/>} />
+        <Route path='/cart/' element={<Cart/>} />
       </Routes>
       <StoreFooter />
     
