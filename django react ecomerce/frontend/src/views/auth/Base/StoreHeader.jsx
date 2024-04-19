@@ -63,7 +63,7 @@ function StoreHeader() {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to={`/customer/orders/`}>
+                    <Link className="dropdown-item" to={`cart/`}>
                       <i className="fas fa-shopping-cart"></i> Orders
                     </Link>
                   </li>

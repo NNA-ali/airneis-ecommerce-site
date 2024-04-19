@@ -4,6 +4,7 @@ from store.models import Category,Tax, Product, Gallery, Specification, Size, Co
 from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
+from rest_framework import generics
 
 
 from rest_framework import generics, status
@@ -169,5 +170,7 @@ class CartDetailView(generics.RetrieveAPIView):
     def calculate_total(self, cart_item):
         return cart_item.total 
     
+
+
     
     

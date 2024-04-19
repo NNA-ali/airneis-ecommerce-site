@@ -1,4 +1,10 @@
 from rest_framework import serializers
+from .models import CarouselImage
+
+
+
+
+
 
 from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
 from vendor.models import Vendor
@@ -235,3 +241,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         else: 
             self.Meta.depth = 3 
 
+class CarouselImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarouselImage
+        fields = ['id', 'title', 'image']

@@ -322,3 +322,10 @@ class Tax(models.Model):
      class Meta:
           verbose_name_plural = "Taxes"
           ordering = ['country']
+
+class CarouselImage(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='images_projet/')  # Assurez-vous que le chemin est correct
+
+    def __str__(self):
+        return self.title

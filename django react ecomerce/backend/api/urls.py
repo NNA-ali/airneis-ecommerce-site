@@ -1,5 +1,8 @@
 from django.urls import path
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
+from .views import CarouselImageView, ImageView
+from django.conf import settings
 
 from userauths import views as userauths_views
 from store import views as store_views
@@ -21,4 +24,6 @@ urlpatterns = [
     path('cart-list/<str:cart_id>/', store_views.CartListView.as_view()),
     path('cart-detail/<str:cart_id>/<int:user_id>/', store_views.CartDetailView.as_view()),
     path('cart-detail/<str:cart_id>/', store_views.CartDetailView.as_view()),
-]
+    path('carousel/', CarouselImageView.as_view(), name='carousel-list'),
+    path('image/<int:image_id>', ImageView.as_view(), name="image-view")
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
