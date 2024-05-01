@@ -173,4 +173,102 @@ class CartDetailView(generics.RetrieveAPIView):
 
 
     
-    
+class CartItemDeleteAPIView(generics.DestroyAPIView): 
+    serializer_class = CartSerializer
+    lookup_field = 'cart_id'  
+
+    def get_object(self):
+     cart_id = self.kwargs['cart_id']
+     item_id = self.kwargs['item_id']
+     user_id = self.kwargs.get('user_id')
+
+     if user_id:
+         user = User.objects.get(id=user_id)
+         cart = Cart.objects.get(id=item_id, user=user)
+     else:
+        cart = Cart.objects.get(id=cart_id)    
+
+     return cart
+
+class CreateOrderAPIView(generics.CreateAPIView):
+    serializer_class = CartOrderSerializer
+    queryset = CartOrder.objects.all()
+    permission_classes = [AllowAny]
+
+
+    def create(self, request):
+        payload = request.data
+
+        full_name = payload['full_name']
+        mobile = payload['mobile']
+        email = payload ['email']
+        address = payload['address']
+        city = payload['city']
+        state = payload['state']
+        country = payload['country']
+        cart_id = payload['cart_id']
+        user_id = payload['user_id']
+        print("user_id ===", user_id)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except:
+            user = None
+
+        print("user ===", user)        
+
+        cart_items = Cart.objects.filter(cart_id=cart_id)        
+
+        total_shipping = Decimal(0.00)
+        total_tax = Decimal(0.00)
+        total_sub_total = Decimal(0.00)
+        total_initial_total = Decimal(0.00)
+        total_total = Decimal(0.00)
+        
+
+        order = CartOrder.objects.create(
+
+            full_name=full_name,
+            email= email,
+            mobile=mobile,
+            address=address,
+            city=city,
+            state=state,
+            country=country,
+
+        )
+
+        for c in cart_items:
+            CartOrderItem.objects.create(
+                order=order,
+                product=c.product,
+                vendor=c.product.vendor,
+                qty=c.qty,
+                size=c.size,
+                price=c.price,
+                sub_total=c.sub_total,
+                shipping_amount=c.shipping_amount,
+                tax_fee=c.tax_fee,
+                total=c.total,
+                initial_total=c.total,
+            )
+
+            total_shipping += Decimal(c.shipping_amount)
+            total_tax += Decimal(c.tax_fee)
+            total_sub_total += Decimal(c.sub_total)
+            total_initial_total += Decimal(c.total)
+            total_total += Decimal(c.total)
+
+            order.vendor.add(c.product.vendor)
+
+        order.sub_total = total_sub_total
+        order.shipping_amount = total_shipping 
+        order.tax_fee = total_tax
+        order.initial_total = total_initial_total   
+        order.total = total_total
+
+        order.save()
+
+        return Response({"message": "Order Created successfully", "order_oid":order.oid}, status=status.HTTP_201_CREATED)   
+
+

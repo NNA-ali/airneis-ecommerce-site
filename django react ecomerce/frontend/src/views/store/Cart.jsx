@@ -20,6 +20,16 @@ function Cart() {
   const [cartTotal, setCartTotal] = useState([])
   const [productQuantities, setProductQuantities] = useState ('')
 
+  const [fullName, setFullName] = useState ("")
+  const [email, setEmail] = useState ("")
+  const [mobile, setMobile] = useState ("")
+
+  const [address, setAddress] = useState ("")
+  const [city, setCity] = useState ("")
+  const [state, setState] = useState ("")
+  const [country, setCountry] = useState ("")
+
+
   // console.log("CART : ", cart);
 
 
@@ -102,7 +112,90 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
         icon:"success",
         title: response.data.message
       })
-}        
+}    
+
+
+const handleDeleteCartItem = async (itemId) => {
+  const url = userData?.user_id
+      ? `cart-delete/${cart_id}/${itemId}/${userData?.user_id}/`
+      : `cart-delete/${cart_id}/${itemId}/`
+
+      try {
+        await  apiInstance.delete(url)
+      fetchCartData (cart_id, userData?.user_id)
+      fetchCartTotal (cart_id, userData?.user_id)
+      Toast.fire({
+        icon:"success",
+        title:"Item Removed From Cart"
+      })
+
+      } catch (error){
+        console.log(error);
+      }
+}
+
+const handleChange = (event) => {
+  const {name, value} = event.target
+  switch (name) {
+    case 'fullName':
+      setFullName(value)
+      break
+
+    case 'email':
+      setEmail(value)
+      break
+
+    case 'mobile':
+      setMobile(value)
+      break
+
+    case 'address':
+      setAddress(value)
+      break
+
+    case 'city':
+      setCity(value)
+      break
+
+    case 'state':
+      setState(value)
+      break
+
+    case 'country':
+      setCountry(value)
+      break
+    
+      default:
+        break
+      
+  }
+}
+const createOrder = async () => {
+  if(!fullName || !email || !mobile || !address ||!city || !country) {
+    Swal.fire({
+      icon: 'warning',
+      title:"Missing Fields!",
+      text:"All fields are required before checkout!"
+    })
+  }
+
+  const formdata = new FormData()
+  formdata.append("full_name",fullName)
+  formdata.append("email",email)
+  formdata.append("mobile",mobile)
+  formdata.append("city",city)
+  formdata.append("address",address)
+  formdata.append("country",country)
+  formdata.append("state",state)
+  formdata.append("cart_id",cart_id)
+  formdata.append("user_id",userData ? userData.user_id : 0)
+
+  const response = await apiInstance.post('create-order/', formdata)
+  console.log(response.data.message);
+  console.log(response.data.order_oid);
+
+  
+}
 
   return (
     <div>
@@ -172,7 +265,7 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                         <span>Airneis</span>
                       </p>
                       <p className="mt-3">
-                        <button className="btn btn-danger ">
+                        <button onClick={() => handleDeleteCartItem(c.id)} className="btn btn-danger ">
                           <small><i className="fas fa-trash me-2" />Remove</small>
                         </button>
                       </p>
@@ -218,6 +311,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id=""
                           name='fullName'
                           className="form-control"
+                          onChange={handleChange}
+                          value={fullName}
                         />
                       </div>
                     </div>
@@ -233,6 +328,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='email'
+                          onChange={handleChange}
+                          value={email}
 
                         />
                       </div>
@@ -245,6 +342,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='mobile'
+                          onChange={handleChange}
+                          value={mobile}
                         />
                       </div>
                     </div>
@@ -261,6 +360,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='address'
+                          onChange={handleChange}
+                          value={address}
                         />
                       </div>
                     </div>
@@ -272,6 +373,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='city'
+                          onChange={handleChange}
+                          value={city}
                         />
                       </div>
                     </div>
@@ -284,6 +387,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='state'
+                          onChange={handleChange}
+                          value={state}
                         />
                       </div>
                     </div>
@@ -295,6 +400,8 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                           id="form6Example1"
                           className="form-control"
                           name='country'
+                          onChange={handleChange}
+                          value={country}
                         />
                       </div>
                     </div>
@@ -326,7 +433,7 @@ const updateCart = async (product_id, price, shipping_amount, color, size) => {
                     <span>Total </span>
                     <span>${cartTotal.total?.toFixed(2)}</span>
                   </div>
-                  <button className="btn btn-primary btn-rounded w-100" >
+                  <button onClick={createOrder} className="btn btn-primary btn-rounded w-100" >
                     Got to checkout
                   </button>
                 </section>

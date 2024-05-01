@@ -7,23 +7,13 @@ import CartID from "../plugin/cartID";
 import Swal from "sweetalert2";
 import { Carousel } from 'react-bootstrap';
 
-
-
-
-const Toast = Swal.mixin({
-  toast: true,
-  position: "top",
-  showConfirmButton: false,
-  timer: 1500,
-  timerProgressBar: true,
-});
-
-
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 function Products() {
   const [category, setCategory] = useState([]);
   const [products, setProducts] = useState([]);
-  const [images, setImages] = useState({});
+  const [darkMode, setDarkMode] = useState(false);
 
   const [colorValue, setColorValue] = useState("No Color");
   const [sizeValue, setSizeValue] = useState("No Size");
@@ -37,35 +27,6 @@ function Products() {
   const userData = UserData();
   const cart_id = CartID();
 
-  const handleColorButtonClick = (event, product_id, colorName) => {
-    console.log("Color button clicked:", colorName);
-
-    setColorValue(colorName);
-    setSelectedProduct(product_id);
-
-    setSelectedColors((prevSelectedColors) => ({
-      ...prevSelectedColors,
-      [product_id]: colorName,
-    }));
-  };
-
-  const handleSizeButtonClick = (event, product_id, size) => {
-    const formattedSize = `${size.length} x ${size.width}`;
-    setSizeValue(formattedSize);
-    setSelectedProduct(product_id);
-
-    setSelectedSize((prevSelectedSize) => ({
-      ...prevSelectedSize,
-      [product_id]: size,
-    }));
-    console.log(formattedSize);
-  };
-
-  const handleQtyChange = (event, product_id) => {
-    setQtyValue(event.target.value);
-    setSelectedProduct(product_id);
-  };
-
   useEffect(() => {
     apiInstance.get(`products/`).then((response) => {
       setProducts(response.data);
@@ -78,8 +39,33 @@ function Products() {
     });
   }, []);
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
-  
+  const handleColorButtonClick = (event, product_id, colorName) => {
+    setColorValue(colorName);
+    setSelectedProduct(product_id);
+    setSelectedColors((prevSelectedColors) => ({
+      ...prevSelectedColors,
+      [product_id]: colorName,
+    }));
+  };
+
+  const handleSizeButtonClick = (event, product_id, size) => {
+    const formattedSize = `${size.length} x ${size.width}`;
+    setSizeValue(formattedSize);
+    setSelectedProduct(product_id);
+    setSelectedSize((prevSelectedSize) => ({
+      ...prevSelectedSize,
+      [product_id]: size,
+    }));
+  };
+
+  const handleQtyChange = (event, product_id) => {
+    setQtyValue(event.target.value);
+    setSelectedProduct(product_id);
+  };
 
   const handleAddToCart = async (product_id, price, shipping_amount) => {
     const formdata = new FormData();
@@ -92,69 +78,61 @@ function Products() {
     formdata.append("size", sizeValue);
     formdata.append("color", colorValue);
     formdata.append("cart_id", cart_id);
-    console.log(formdata);
 
     try {
       const response = await apiInstance.post(`cart-view/`, formdata);
-      console.log(response.data);
-
       Swal.fire({
         icon: "success",
         title: response.data.message,
       });
-      // Afficher un message de succès ou rediriger l'utilisateur vers une autre page
     } catch (error) {
       console.error("Erreur lors de l'ajout du produit au panier:", error);
-      // Afficher un message d'erreur à l'utilisateur
     }
   };
 
   return (
-    <>
+    <div className={darkMode ? "dark-mode" : "light-mode"} style={darkMode ? {backgroundColor : '#1e1e1e'} : {backgroundColor : "#fff"}}>
+        {darkMode ? <LightModeIcon onClick={toggleDarkMode} style={{color : "white", cursor : "pointer", width : "40px", height : "40px"}} /> : <DarkModeIcon onClick={toggleDarkMode} style={{cursor : "pointer", width : "40px", height : "40px"}}  />}
+      <Carousel style={{paddingRight : "0px"}}>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src="https://www.minotti.com/media/immagini/11315_z_MINOTTI_GOODMAN.jpg"
+            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px' }}
+            alt="Image 3"
+          />
+          <Carousel.Caption>
+            <h3>Luxury Living Room Set</h3>
+            <p>Experience the epitome of comfort and elegance.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src="https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/San-Marco.jpeg"  
+            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px'  }}
+            alt="Image 2"
+          />
+          <Carousel.Caption>
+            <h3>Luxurious Bed Collection</h3>
+            <p>Indulge in unparalleled relaxation and style.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src={"https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/chaise-turri-eclipse.jpg"}
+            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px' }}
+            alt="Image 2"
+          />
+          <Carousel.Caption>
+            <h3>Elegant Dining Table Ensemble</h3>
+            <p>Elevate your dining experience with sophistication.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
 
- <Carousel>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="https://via.placeholder.com/800x400"  // Remplacez ceci par le chemin complet de votre image
-      alt="Image 3"
-    />
-    <Carousel.Caption>
-      <h3>First slide label</h3>
-      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="https://via.placeholder.com/800x400"  // Remplacez ceci par le chemin complet de votre image
-      alt="Image 2"
-    />
-    <Carousel.Caption>
-      <h3>Second slide label</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
-  <Carousel.Item>
-    <img
-      className="d-block w-100"
-      src="staticfiles/images/image2.jpg"
-      alt="Image 2"
-    />
-    <Carousel.Caption>
-      <h3>Third slide label</h3>
-      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-    </Carousel.Caption>
-  </Carousel.Item>
- </Carousel>
-
-
-
-
-
-      <div className="row justify-content-center mt-5 pt-3"></div>
-
-      <div className="row justify-content-center mt-5 pt-3">
+      <div className="row justify-content-center mt-5 pt-3" style={{marginRight: "0px"}}>
         {category?.map((c, index) => (
           <div key={index} className="col-lg-2 mb-5">
             <div className="text-center">
@@ -168,23 +146,24 @@ function Products() {
                 }}
                 alt=""
               />
-              <h6>{c.title}</h6>
+              <h6 style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>{c.title}</h6>
             </div>
           </div>
         ))}
       </div>
 
-      <main className="mt-5">
-        <div className="container">
+      <main className="mt-5" >
+        <div className="container" >
           <section className="text-center">
-            <div className="row">
+            <div className="row" >
               {products?.map((product, index) => (
-                <div className="col-lg-4 col-md-12 mb-4" key={index}>
-                  <div className="card">
+                <div className="col-lg-4 col-md-12 mb-4" key={index} style={!darkMode ? {backgroundColor : '#fff'} : {backgroundColor : "#1e1e1e"}} >
+                  <div className="card" style= {{borderRadius:'30px'} } >
                     <div
                       className="bg-image hover-zoom ripple"
                       data-mdb-ripple-color="light"
                     >
+                      <br style={!darkMode ? {backgroundColor : '#fff'} : {backgroundColor : "#1e1e1e"}}></br>
                       <Link to={`/detail/${product.slug}/`}>
                         <img
                           src={product.image}
@@ -193,7 +172,7 @@ function Products() {
                         />
                       </Link>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body"  style={  !darkMode ? {backgroundColor : '#fff', color : '#1e1e1e'} : {backgroundColor : "#1e1e1e", color : '#fff'}}>
                       <Link
                         to={`/detail/${product.slug}/`}
                         href=""
@@ -248,7 +227,6 @@ function Products() {
                           {product.size?.length > 0 && (
                             <div className="d-flex flex-column">
                               <li className="product-1">
-                                {/* <b>Size:</b> :{selectedSize[product?.id] || 'select a size'} */}
                                 <b>Size:</b> :
                                 {selectedSize[product?.id]
                                   ? `${selectedSize[product?.id].length} x ${selectedSize[product?.id].width}`
@@ -346,11 +324,9 @@ function Products() {
               ))}
             </div>
           </section>
-
-          {/*Section: Wishlist*/}
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

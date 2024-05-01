@@ -2,7 +2,7 @@ import React from 'react'
 
 function StoreFooter() {
   return (
-    <div>
+    <div >
       <footer className="bg-light text-center text-lg-start">
         {/* Grid container */}
         <div className="container-fluid p-4">

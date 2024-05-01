@@ -18,3 +18,8 @@ class ImageView(APIView):
         image_path = image.image.path
         with open(image_path, "rb") as f:
             return Response(f.read(), content_type="image/jpeg") # ou "image/png" selon le format
+
+class ImageURLView(APIView):
+    def get(self, request):
+        image_url = '/static/image1.jpg'  # Chemin vers votre image statique
+        return Response({'image_url': image_url})

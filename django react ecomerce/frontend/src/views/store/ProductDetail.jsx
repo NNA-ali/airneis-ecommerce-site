@@ -13,6 +13,9 @@ import { addToWishlist } from '../plugin/addToWishlist';
 import { CartContext } from '../plugin/Context';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+
 
 
 function ProductDetail() {
@@ -25,6 +28,7 @@ function ProductDetail() {
     const [size, setSize] = useState([])
     const [vendor, setVendor] = useState([])
     const [vendorUser, setVendorUser] = useState([])
+    const [darkMode, setDarkMode] = useState(false);
 
     const [colorValue, setColorValue] = useState("Our Color")
     const [colorImage, setColorImage] = useState("image-url.jpg")
@@ -188,8 +192,12 @@ function ProductDetail() {
         setProductImage(image);
     };
     
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
     return (
-        <div>
+        <div className={darkMode ? "dark-mode" : "light-mode"} style={darkMode ? {backgroundColor : '#1e1e1e'} : {backgroundColor : "#fff"}}>
+            {darkMode ? <LightModeIcon onClick={toggleDarkMode} style={{color : "white", cursor : "pointer", width : "40px", height : "40px"}} /> : <DarkModeIcon onClick={toggleDarkMode} style={{cursor : "pointer", width : "40px", height : "40px"}}  />}
             <main className="mb-4 mt-4">
                 {loading === false &&
                     <div className="container">
@@ -246,8 +254,8 @@ function ProductDetail() {
                                 <div className="col-md-6 mb-4 mb-md-0">
                                     {/* Details */}
                                     <div>
-                                        <h1 className="fw-bold mb-3">{product.title}</h1>
-                                        <div className="d-flex text-primary just align-items-center">
+                                        <h1 className="fw-bold mb-3" style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>{product.title}</h1>
+                                        <div  className="d-flex text-primary just align-items-center">
                                             <ul className="mb-3 d-flex p-0" style={{ listStyle: "none" }}>
                                                 {product.product_rating === null &&
                                                     <li><i className="fas fa-star fa-sm text-warning ps-0" /></li>
@@ -289,7 +297,7 @@ function ProductDetail() {
                                                     </>
                                                 }
 
-                                                <li style={{ marginLeft: 10, fontSize: 13 }}>
+                                                <li style={{ marginLeft: 10, fontSize: 13 } } >
                                                     <a href="" className="text-decoration-none align-middle">
                                                         {product.product_rating !== null &&
                                                             <>
@@ -299,15 +307,15 @@ function ProductDetail() {
 
                                                         {product.product_rating === null &&
                                                             <>
-                                                                <strong className="me-2 text-dark">Not Rated Yet</strong>(0 reviews)
+                                                                <span style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="me-2">Not Rated Yet</span>(0 reviews) 
                                                             </>
                                                         }
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <h5 className="mb-3">
-                                            <s className="text-muted me-2 small align-middle">{addon?.currency_sign}{product.old_price}</s>
+                                        <h5 style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="mb-3">
+                                            <s  className="text-muted me-2 small align-middle">{addon?.currency_sign}{product.old_price}</s>
                                             <span className="align-middle">{addon?.currency_sign}{product?.price}</span> <span className='align-middle text-muted' style={{ fontSize: "13px", fontStyle: "italic" }}>({product.get_precentage}% OFF)</span>
                                         </h5>
                                         <p className="text-muted">
@@ -318,8 +326,8 @@ function ProductDetail() {
                                                 <tbody>
                                                     {specifications?.map((s, index) => (
                                                         <tr key={index}>
-                                                            <th className="ps-0 w-25" scope="row"><strong>{s.title}</strong></th>
-                                                            <td>{s.content}</td>
+                                                            <th style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="ps-0 w-25" scope="row"><strong>{s.title}</strong></th>
+                                                            <td style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>{s.content}</td>
                                                         </tr>
                                                     ))}
 
@@ -332,8 +340,8 @@ function ProductDetail() {
                                                 {/* Quantity */}
                                                 <div className="col-md-6 mb-4">
                                                     <div className="form-outline">
-                                                        <label className="form-label" htmlFor="typeNumber"><b>Quantity</b></label>
-                                                        <input
+                                                        <label style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="form-label" htmlFor="typeNumber"><b>Quantity</b></label>
+                                                        <input 
                                                             type="number"
                                                             id="typeNumber"
                                                             className="form-control quantity"
@@ -349,7 +357,7 @@ function ProductDetail() {
                                                     // Render something when the 'size' array has items
                                                     <div className="col-md-6 mb-4">
                                                         <div className="form-outline">
-                                                            <label className="form-label" htmlFor="typeNumber"><b>Size:</b> {sizeValue}</label>
+                                                            <label style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="form-label" htmlFor="typeNumber"><b>Size:</b> {sizeValue}</label>
                                                         </div>
                                                         <div className='d-flex'>
                                                             {size?.map((s, index) => (
@@ -370,7 +378,7 @@ function ProductDetail() {
 
                                                     <div className="col-md-6 mb-4">
                                                         <div className="form-outline">
-                                                            <label className="form-label" htmlFor="typeNumber"><b>Color:</b> <span>{colorValue}</span></label>
+                                                            <label style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="form-label" htmlFor="typeNumber"><b>Color:</b> <span>{colorValue}</span></label>
                                                         </div>
                                                         <div className='d-flex'>
                                                             {color?.map((c, index) => (
@@ -426,10 +434,11 @@ function ProductDetail() {
                                     aria-controls="pills-home"
                                     aria-selected="true"
                                 >
+                                    
                                     Specifications
                                 </button>
                             </li>
-                            <li className="nav-item" role="presentation">
+                            <li  className="nav-item" role="presentation">
                                 <button
                                     className="nav-link"
                                     id="pills-profile-tab"
@@ -472,7 +481,7 @@ function ProductDetail() {
                                 </button>
                             </li> */}
                         </ul>
-                        <div className="tab-content" id="pills-tabContent">
+                        <div className="tab-content" id="pills-tabContent" style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>
                             <div
                                 className="tab-pane fade show active"
                                 id="pills-home"
@@ -481,7 +490,7 @@ function ProductDetail() {
                                 tabIndex={0}
                             >
                                 <div className="table-responsive">
-                                    <table className="table table-sm table-borderless mb-0">
+                                    <table className="table table-sm table-borderless mb-0" style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>
                                         <tbody>
                                             {specifications?.map((s, index) => (
                                                 <tr key={index}>
