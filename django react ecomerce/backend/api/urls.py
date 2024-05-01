@@ -27,6 +27,7 @@ urlpatterns = [
     path('carousel/', CarouselImageView.as_view(), name='carousel-list'),
     path('image/', ImageURLView.as_view(), name="image-view"),
     path('create-order/', store_views.CreateOrderAPIView.as_view()),
+    path('checkout/<order_oid>/', store_views.CheckoutView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/', store_views.CartItemDeleteAPIView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

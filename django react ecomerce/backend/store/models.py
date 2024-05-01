@@ -199,6 +199,9 @@ class CartOrder(models.Model):
      def __str__(self):
           return self.oid
      
+     def orderitem(self):
+          return CartOrderItem.objects.filter(order=self)
+     
 
 class CartOrderItem(models.Model):
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)

@@ -6,6 +6,7 @@ import UserData from '../plugin/UserData'
 import CartID from '../plugin/cartID'
 import GetCurrentAddress from '../plugin/UserCountry';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const Toast = Swal.mixin({
   toast:true,
@@ -35,7 +36,8 @@ function Cart() {
 
   const userData = UserData()
   const cart_id = CartID()
-  const currentAddress = GetCurrentAddress
+  const currentAddress = GetCurrentAddress()
+  const navigate = useNavigate ()
   const fetchCartData = (cartId, userId) => {
     const url = userId ? `cart-list/${cartId}/${userId}/`: `cart-list/${cartId}/`
     apiInstance.get(url).then((res) => {
@@ -177,24 +179,33 @@ const createOrder = async () => {
       title:"Missing Fields!",
       text:"All fields are required before checkout!"
     })
+  } else {
+
+   try {
+    
+    const formdata = new FormData()
+    formdata.append("full_name",fullName)
+    formdata.append("email",email)
+    formdata.append("mobile",mobile)
+    formdata.append("city",city)
+    formdata.append("address",address)
+    formdata.append("country",country)
+    formdata.append("state",state)
+    formdata.append("cart_id",cart_id)
+    formdata.append("user_id",userData ? userData.user_id : 0)
+  
+    const response = await apiInstance.post('create-order/', formdata)
+
+    navigate (`/checkout/${response.data.order_oid}/`)
+
+   } catch (error) {
+
+       console.log(error);
+    
+   }
+  
   }
 
-  const formdata = new FormData()
-  formdata.append("full_name",fullName)
-  formdata.append("email",email)
-  formdata.append("mobile",mobile)
-  formdata.append("city",city)
-  formdata.append("address",address)
-  formdata.append("country",country)
-  formdata.append("state",state)
-  formdata.append("cart_id",cart_id)
-  formdata.append("user_id",userData ? userData.user_id : 0)
-
-  const response = await apiInstance.post('create-order/', formdata)
-  console.log(response.data.message);
-  console.log(response.data.order_oid);
-
-  
 }
 
   return (
