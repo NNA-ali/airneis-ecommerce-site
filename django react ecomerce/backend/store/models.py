@@ -218,6 +218,7 @@ class CartOrderItem(models.Model):
     size = models.CharField(max_length=100, null=True, blank=True)  # Correction de l'argument max_length
     color = models.CharField(max_length=100, null=True, blank=True)  # Correction de l'argument max_length
     # Coupons
+    coupon = models.ManyToManyField("store.Coupon", blank=True)
     initial_total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     saved = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     oid = ShortUUIDField(length=10, alphabet="abcdefg12345", blank=True)  # Suppression de l'attribut unique

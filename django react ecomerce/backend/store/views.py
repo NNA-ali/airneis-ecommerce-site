@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from userauths.models import User
 from store.models import Category,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer
+from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
 from rest_framework import generics
@@ -63,7 +63,7 @@ class CartAPIView(generics.ListCreateAPIView):
         else:
             tax_rate = 0
 
-        cart = Cart.objects.filter(cart_id=cart_id, product=product).first()
+        cart = Cart.objects.filter(cart_id=cart_id, product=product).first() 
 
         if cart:
             cart.product = product
@@ -176,6 +176,7 @@ class CartDetailView(generics.RetrieveAPIView):
 class CartItemDeleteAPIView(generics.DestroyAPIView): 
     serializer_class = CartSerializer
     lookup_field = 'cart_id'  
+    permission_classes = [AllowAny]
 
     def get_object(self):
      cart_id = self.kwargs['cart_id']
@@ -275,9 +276,55 @@ class CreateOrderAPIView(generics.CreateAPIView):
 class CheckoutView(generics.RetrieveAPIView):
     serializer_class = CartOrderSerializer
     lookup_field = 'order_oid'
+    permission_classes = [AllowAny]
 
     def get_object(self):
         order_oid = self.kwargs['order_oid']
         order = CartOrder.objects.get(oid=order_oid)
 
         return order
+
+class CouponAPIView(generics.CreateAPIView):
+     serializer_class = CouponSerializer
+     queryset = Coupon.objects.all()
+     permission_classes = [AllowAny]
+
+     def create(self,request):
+         payload = request.data
+
+         order_oid = payload['order_oid']
+         coupon_code = payload['coupon_code']
+
+         order = CartOrder.objects.get(oid=order_oid)
+         coupon = Coupon.objects.filter(code=coupon_code).first()
+
+         if coupon:
+             order_items = CartOrderItem.objects.filter(order=order, vendor=coupon.vendor)
+             if order_items:
+                 for i in order_items:
+                     if not coupon in i.coupon.all():
+                         discount = i.total * coupon.discount / 100
+
+                         i.total -= discount
+                         i.sub_total -= discount
+                         i.coupon.add(coupon)
+                         i.saved += discount
+
+                         order.total -= discount
+                         order.sub_total -= discount
+                         order.saved += discount
+
+                         i.save()
+                         order.save()
+
+                         return Response({"message":"coupon Activated", "icon":"success"}, status=status.HTTP_200_OK)
+                     
+                     else:
+                         return Response({"message":"coupon Already Activated", "icon":"warning"}, status=status.HTTP_200_OK)
+             else:
+                 return Response ( {"message":"Order Item Does Not Exists", "icon":"error"}, status=status.HTTP_200_OK) 
+         else:
+             return Response ({"message":"Coupon Does Not Exists","icon":"error"}, status=status.HTTP_200_OK)
+                 
+                     
+            

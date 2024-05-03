@@ -1,21 +1,51 @@
 import React, { useState,useEffect } from 'react'
 import apiInstance from '../../utils/axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 
 function Checkout() {
 
     const [order, setOrder] = useState([])
+    const [couponCode, setCouponCode] =useState("")
 
     const param = useParams()
-    console.log(param.order_oid);
+
+    const fetchOrderData = () => {
+
+      apiInstance.get(`checkout/${param.order_oid}/`).then((res) => {
+        setOrder(res.data)
+    })
+    }
+    
 
 
     useEffect(() => {
-        apiInstance.get(`checkout/${param.order_oid}/`).then((res) => {
-            setOrder(res.data)
-        })
+      fetchOrderData()
     }, [])
+    
+
+    const applyCoupon = async () => {
+      console.log(couponCode);
+      console.log(param.order_oid);
+
+      const formdata = new FormData ()
+      formdata.append("order_oid",order.oid)
+      formdata.append("coupon_code,",couponCode)
+
+      try {
+        const response = await apiInstance.post("coupon/", formdata)
+        fetchOrderData()
+        console.log(response.data.message);
+        Swal.fire({
+          icon: response.data.icon,
+          title : response.data.message,
+        })
+      } catch (error) {
+         console.log(error)
+        
+      }
+    }
   return (
     <main className="mb-4 mt-4">
           <div className="container">
@@ -143,6 +173,14 @@ function Checkout() {
                     <span>Tax </span>
                     <span>${order.tax_fee }</span>
                   </div>
+
+                  {order.saved !== "0.00" && 
+                     <div className="d-flex text-danger justify-content-between mb-3">
+                     <span>Discount </span>
+                     <span>-${order.saved }</span>
+                   </div>
+                  }
+                  
                   
                   <hr className="my-4" />
                   <div className="d-flex justify-content-between fw-bold mb-5">
@@ -155,9 +193,14 @@ function Checkout() {
                        
                      
                         <>
-                          <input readOnly  name="couponCode" type="text" className='form-control' style={{ border: "dashed 1px gray" }} placeholder='Enter Coupon Code' id="" />
+                          <input   name="couponCode" type="text" className='form-control' style={{ border: "dashed 1px gray" }} 
+                          placeholder='Enter Coupon Code' 
+                          onChange={(e)=> setCouponCode(e.target.value)}
+                          />
                           <br></br>
-                          <button disabled className='btn btn-success ms-1'><i className='fas fa-spinner fa-spin'></i></button>
+                          <button
+                          type ="button"
+                           onClick={applyCoupon} > Apply </button>
                         </>
                       
                       
