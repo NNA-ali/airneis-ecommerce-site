@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.conf import settings
 from userauths.models import User
 from store.models import Category,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
 from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer
@@ -11,6 +12,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from decimal import Decimal
+
+import stripe
+
+stripe.api_key = "sk_test_51PCeRQH1sta5VsnZNRXTbW9jrDoPSMX4ufLQ9HdlNXnjnxZin1S9C9a85JDrDefgmblFRm1uuqOfRshEbv5GJqr500Oymcrr4V"
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class= CategorySerializer
@@ -325,6 +330,85 @@ class CouponAPIView(generics.CreateAPIView):
                  return Response ( {"message":"Order Item Does Not Exists", "icon":"error"}, status=status.HTTP_200_OK) 
          else:
              return Response ({"message":"Coupon Does Not Exists","icon":"error"}, status=status.HTTP_200_OK)
-                 
+
+
+class StripeCheckoutView(generics.CreateAPIView):
+    serializer_class = CartOrderSerializer
+    permission_classes = [AllowAny]
+    queryset = CartOrder.objects.all()
+
+    def create(self, *args, **kwargs):
+        order_oid = self.kwargs['order_oid']
+        order = CartOrder.objects.filter(oid=order_oid).first()
+
+        if not order:
+            return Response({"message": "Order Not Found"},status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+              customer_email=order.email,
+              payment_method_types=['card'],
+              line_items=[
+                {
+                    'price_data':{
+                        'currency':'usd',
+                        'product_data':{
+                            'name':order.full_name,
+                        },
+                        'unit_amount': int(order.total *100)
+                    },
+                    'quantity':1,
+                }
+              ],
+              mode='payment',
+               success_url='http://localhost:5173/payment-success/'+ order.oid +'?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url='http://localhost:5173/payment-failed/?session_id={CHECKOUT_SESSION_ID}',
+            )
+
+            order.stripe_session_id = checkout_session.id
+            order.save()
+
+            print("CHECKOUT_SESSION_URL : ", checkout_session.url)
+            return redirect(checkout_session.url)
+        
+        except stripe.error.StripeError as e:
+            return Response({"error": f"Something went wrong while creating the checkout session:{str(e)} "})
                      
-            
+
+class PaymentSuccessView(generics.CreateAPIView):
+    serializer_class = CartOrderSerializer  
+    permission_classes = [AllowAny]
+    queryset = CartOrder.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        payload = request.data
+
+        order_oid = payload['order_oid']
+        session_id = payload['session_id']
+
+        order = CartOrder.objects.get(oid=order_oid)
+        order_items = CartOrderItem.objects.filter(order=order)
+
+
+        if session_id != 'null':
+            session = stripe.checkout.Session.retrieve(session_id)
+
+            if session.payment_status == "paid":
+                if order.payment_status == "pending":
+                   order.payment_status = 'paid'
+                   order.save()
+                   return Response({"message":"Payment Successfull"}) 
+                else:
+                   return Response({"message":"Already Paid"}) 
+            elif session.payment_status == "unpaid":    
+                return Response({"message":"your Invoice is unpaid"})
+            elif session.payment_status == "cancelled":    
+                return Response({"message":"your Invoice was cancelled"})
+            else:
+                return Response({"message":"An Error Occured, Try Again.."})
+
+        else:
+            session = None    
+
+                  
+

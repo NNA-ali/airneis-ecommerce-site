@@ -46,9 +46,9 @@ class CartOrderItemsAdmin(admin.ModelAdmin):
 class CartOrderAdmin(admin.ModelAdmin):
     
     search_fields = ['oid', 'full_name', 'email', 'mobile']
-    list_editable = ['order_status', 'payment_status']
+    
     list_filter = ['payment_status', 'order_status']
-    list_display = ['oid', 'payment_status', 'order_status', 'sub_total', 'shipping_amount' ,'tax_fee','total', 'saved' ,'date']
+    list_display = ['oid', 'payment_status', 'order_status' ,'total' ,'date']
 
 class CartAdmin(admin.ModelAdmin):
     list_display = ['product', 'cart_id', 'qty', 'price', 'sub_total' , 'shipping_amount', 'tax_fee', 'total', 'country', 'size', 'color', 'date']
@@ -77,7 +77,7 @@ class NotificationAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart)
-admin.site.register(CartOrder)
+admin.site.register(CartOrder, CartOrderAdmin)
 admin.site.register(CartOrderItem)
 admin.site.register(ProductFaq, ProductFaqAdmin)
 admin.site.register(Coupon, CouponAdmin)

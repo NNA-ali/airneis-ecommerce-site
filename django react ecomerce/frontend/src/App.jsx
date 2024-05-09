@@ -14,6 +14,7 @@ import ProductDetail from './views/store/ProductDetail'
 import { CartContext } from './views/plugin/Context'
 import Cart from './views/store/Cart'
 import Checkout from './views/store/Checkout'
+import PaymentSuccess from './views/store/PaymentSuccess'
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
         <Route path='/detail/:slug/' element={<ProductDetail/>} />
         <Route path='/cart/' element={<Cart/>} />
         <Route path='/checkout/:order_oid/' element={<Checkout />} />
+        <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
       </Routes>
       <StoreFooter />
     

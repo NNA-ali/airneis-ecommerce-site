@@ -50,7 +50,7 @@ function Cart() {
     apiInstance.get(url).then((res) => {
       setCartTotal(res.data)
       console.log("", res.data)
-      console.log(tax_rate)
+      
     })
   }
 

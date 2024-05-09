@@ -29,6 +29,9 @@ urlpatterns = [
     path('create-order/', store_views.CreateOrderAPIView.as_view()),
     path('checkout/<order_oid>/', store_views.CheckoutView.as_view()),
     path('coupon/',store_views.CouponAPIView.as_view()),
+    # payment Endpoints
+    path('stripe-checkout/<order_oid>/',store_views.StripeCheckoutView.as_view()),
+    path('payment-success/<order_oid>/',store_views.PaymentSuccessView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/', store_views.CartItemDeleteAPIView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
