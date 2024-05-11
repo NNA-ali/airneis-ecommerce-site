@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from userauths.models import User
 from store.models import Category,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer
+from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer, NotificationSerializer
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
 from rest_framework import generics
@@ -16,6 +18,17 @@ from decimal import Decimal
 import stripe
 
 stripe.api_key = "sk_test_51PCeRQH1sta5VsnZNRXTbW9jrDoPSMX4ufLQ9HdlNXnjnxZin1S9C9a85JDrDefgmblFRm1uuqOfRshEbv5GJqr500Oymcrr4V"
+
+def send_notification(user=None, vendor=None, order=None, order_item=None):
+    Notification.objects.create(
+        user=user,
+        vendor=vendor,
+        order=order,
+        order_item=order_item
+
+    )
+    
+
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class= CategorySerializer
@@ -397,6 +410,36 @@ class PaymentSuccessView(generics.CreateAPIView):
                 if order.payment_status == "pending":
                    order.payment_status = 'paid'
                    order.save()
+                   
+                   #send notification to customers
+                   if order.buyer != None:
+                       send_notification(user=order.buyer, order=order)
+
+                   # SEND NOTIFICATION TO VENDORS
+
+                   for o in order_items:
+                       send_notification(vendor=o.vendor, order=order, order_item=o)    
+
+                   #send email to buyer
+                   context = {
+                       'order': order,
+                       'orer_items': order_items,
+                   }   
+
+                   subject = "Order Placed Successfully"
+                   text_body = render_to_string("email/customer_order_confirmation.txt", context)
+                   html_body = render_to_string("email/customer_order_confirmation.html", context)
+
+                   msg = EmailMultiAlternatives(
+                       subject=subject,
+                       from_email=settings.FROM_EMAIL,
+                       to=[order.email],
+                       body=text_body
+                   )
+
+                   msg.attach_alternative(html_body, "text/html")
+                   msg.send()
+
                    return Response({"message":"Payment Successfull"}) 
                 else:
                    return Response({"message":"Already Paid"}) 

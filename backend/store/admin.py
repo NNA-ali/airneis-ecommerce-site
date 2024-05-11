@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from store.models import Product, Tax, Category, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon, Wishlist
+from store.models import Product, Tax, Category, Gallery , Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon, Wishlist
 
 class GalleryInline(admin.TabularInline):
     model = Gallery

@@ -97,7 +97,7 @@ function Products() {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="https://www.minotti.com/media/immagini/11315_z_MINOTTI_GOODMAN.jpg"
+            src="https://img.freepik.com/photos-premium/salon-decore-meubles-minimalistes_7023-180375.jpg?w=996"
             style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px' }}
             alt="Image 3"
           />
