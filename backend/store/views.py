@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from decimal import Decimal
 
 import stripe
+import requests
 
 stripe.api_key = "sk_test_51PCeRQH1sta5VsnZNRXTbW9jrDoPSMX4ufLQ9HdlNXnjnxZin1S9C9a85JDrDefgmblFRm1uuqOfRshEbv5GJqr500Oymcrr4V"
 

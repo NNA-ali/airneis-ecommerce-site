@@ -48,7 +48,7 @@ class CartOrderAdmin(admin.ModelAdmin):
     search_fields = ['oid', 'full_name', 'email', 'mobile']
     
     list_filter = ['payment_status', 'order_status']
-    list_display = ['oid', 'payment_status', 'order_status' ,'total' ,'date']
+    list_display = ['oid', 'buyer', 'payment_status', 'order_status' ,'total' ,'date']
 
 class CartAdmin(admin.ModelAdmin):
     list_display = ['product', 'cart_id', 'qty', 'price', 'sub_total' , 'shipping_amount', 'tax_fee', 'total', 'country', 'size', 'color', 'date']

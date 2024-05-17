@@ -6,6 +6,7 @@ from django.conf import settings
 
 from userauths import views as userauths_views
 from store import views as store_views
+from customer import views as customer_views
 
 
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
     path('user/register/',userauths_views.RegisterView.as_view()),
     path('user/password-reset/<email>/',userauths_views.PasswordResetEmailVerify.as_view()),
     path('user/password-change/', userauths_views.PasswordChangeView.as_view()),
+    path('user/profile/<user_id>/', userauths_views.ProfileView.as_view()),
 
     #Store Endpoint
     path('category/',store_views.CategoryListAPIView.as_view()),
@@ -33,5 +35,8 @@ urlpatterns = [
     path('stripe-checkout/<order_oid>/',store_views.StripeCheckoutView.as_view()),
     path('payment-success/<order_oid>/',store_views.PaymentSuccessView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/', store_views.CartItemDeleteAPIView.as_view()),
+    #Customer Endpoints
+    path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
+    path('customer/orders/<user_id>/<order_oid>/', customer_views.OrdersAPIView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

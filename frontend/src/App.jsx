@@ -15,8 +15,14 @@ import { CartContext } from './views/plugin/Context'
 import Cart from './views/store/Cart'
 import Checkout from './views/store/Checkout'
 import PaymentSuccess from './views/store/PaymentSuccess'
+import Account from './views/customer/Account'
+import PrivateRoutes from './layout/PrivateRoute'
+import Orders from './views/customer/Orders'
+
+
 
 function App() {
+  
 
   return (
     <BrowserRouter>
@@ -36,6 +42,12 @@ function App() {
         <Route path='/cart/' element={<Cart/>} />
         <Route path='/checkout/:order_oid/' element={<Checkout />} />
         <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
+
+        {/* Customer Routes */}
+        <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
+        <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
+        
+
       </Routes>
       <StoreFooter />
     
