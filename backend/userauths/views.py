@@ -19,13 +19,14 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
 
 def generate_otp():
     uuid_key = shortuuid.uuid()
     unique_key = uuid_key[:6]
+    print("OTP : ", unique_key)
     return unique_key
     
 class PasswordResetEmailVerify(generics.RetrieveAPIView):
@@ -35,8 +36,6 @@ class PasswordResetEmailVerify(generics.RetrieveAPIView):
     def get_object(self): 
         email = self.kwargs['email']
         user = User.objects.get(email=email)
-
-       
 
         if user:
             user.otp = generate_otp()
@@ -86,6 +85,7 @@ class ProfileView(generics.RetrieveAPIView):
         user_id = self.kwargs['user_id']
 
         user = User.objects.get(id=user_id)
+        print(user)
         profile = Profile.objects.get(user=user)  
         return profile
                  

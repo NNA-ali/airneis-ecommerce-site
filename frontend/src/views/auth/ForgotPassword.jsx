@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import apiInstance from '../../utils/axios';
 import Swal from 'sweetalert2'
 
@@ -12,6 +12,8 @@ function ForgotPassword() {
     const otp = searchParams.get('otp');
     const uuid = searchParams.get('uuid');
 
+    let navigate = useNavigate()
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value)
         console.log(email);
@@ -20,11 +22,13 @@ function ForgotPassword() {
 
     const handleEmailSubmit = () => {
         axios.get(`user/password-reset/${email}/`).then((res) => {
-            console.log(res.data);
+            console.log("USER INFO : ", res.data);
             Swal.fire({
                 icon: 'success',
                 title: 'Password Reset Email Sent!',
             })
+            const path = `/create-new-password?otp=${res.data.otp}&uidb64=${res.data.id}`;
+            navigate(path);
         })
     }
 

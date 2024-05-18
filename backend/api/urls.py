@@ -9,6 +9,7 @@ from store import views as store_views
 from customer import views as customer_views
 
 
+
 urlpatterns = [
     path('user/token/', userauths_views.MyTokenObtainPairView.as_view()),
     path('user/token/refresh/',TokenRefreshView.as_view()),
@@ -37,6 +38,6 @@ urlpatterns = [
     path('cart-delete/<str:cart_id>/<int:item_id>/', store_views.CartItemDeleteAPIView.as_view()),
     #Customer Endpoints
     path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
-    path('customer/orders/<user_id>/<order_oid>/', customer_views.OrdersAPIView.as_view()),
+    path('customer/order/<user_id>/<order_oid>/', customer_views.OrderDetailAPIView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

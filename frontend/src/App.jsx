@@ -18,6 +18,7 @@ import PaymentSuccess from './views/store/PaymentSuccess'
 import Account from './views/customer/Account'
 import PrivateRoutes from './layout/PrivateRoute'
 import Orders from './views/customer/Orders'
+import OrderDetail from './views/customer/OrderDetail'
 
 
 
@@ -46,6 +47,7 @@ function App() {
         {/* Customer Routes */}
         <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
         <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
+        <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
         
 
       </Routes>

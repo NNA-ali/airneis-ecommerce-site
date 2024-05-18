@@ -5,13 +5,13 @@ import apiInstance from '../../utils/axios';
 import UserData from '../plugin/UserData';
 import Sidebar from './Sidebar';
 function Account() {
-  const [profile, setProfile] = useState ({})
+  const [profile, setProfile] = useState({})
     const userData = UserData()
 
     useEffect(() => {
         apiInstance.get(`user/profile/${userData?.user_id}/`).then((res) => {
             setProfile(res.data)
-            
+            console.log(res.data);
         } )
 
     },[])

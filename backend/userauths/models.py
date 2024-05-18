@@ -3,7 +3,14 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
+import shortuuid
 from shortuuid.django_fields import ShortUUIDField
+
+def generate_otp():
+    uuid_key = shortuuid.uuid()
+    unique_key = uuid_key[:6]
+    print("OTP : ", unique_key)
+    return unique_key
 
 class User(AbstractUser):
     username = models.CharField(max_length=100, null=True, blank=True)
@@ -23,7 +30,9 @@ class User(AbstractUser):
         if self.full_name == "" or self.full_name == None:
             self.fullname = email_username
         if self.username == "" or self.username == None:
-            self.username = email_username   
+            self.username = email_username 
+
+        self.otp = generate_otp()
 
         super(User, self).save(*args, **kwargs)
 
@@ -58,6 +67,7 @@ class Profile(models.Model):
 
 def create_user_profile(sender, instance, created,**kwargs):
     if created:
+        print("Profile Created")
         Profile.objects.create(user=instance)
 
 def save_user_profile(sender, instance, **kwargs):

@@ -148,7 +148,10 @@ function PaymentSuccess() {
                                 <i className="fas fa-file-invoice" />{" "}
                               </a>
                               <a className="btn btn-secondary mt-3 ms-2">
-                                Go Home <i className="fas fa-fa-arrow-left" />{" "}
+                                <Link to="/" style={{ color: "white" }}>
+                                  {" "}
+                                  Go Home <i className="fas fa-arrow-left" />
+                                </Link>
                               </a>
                             </div>
                           </div>

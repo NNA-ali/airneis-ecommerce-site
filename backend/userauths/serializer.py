@@ -31,13 +31,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
              raise serializers.ValidationError({"password":"password does not match"})
         return attrs
+     
      def create(self,validated_data):
           user = User.objects.create(
                full_name=validated_data['full_name'],
                email=validated_data['email'],
                phone=validated_data['phone'],
-               
-               
           )
 
           email_user, mobile = user.email.split("@")

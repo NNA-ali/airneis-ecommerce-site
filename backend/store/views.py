@@ -219,10 +219,13 @@ class CreateOrderAPIView(generics.CreateAPIView):
     def create(self, request):
         payload = request.data
 
+        print("PAYLOAD : ", payload)
+
         full_name = payload['full_name']
         mobile = payload['mobile']
         email = payload ['email']
         address = payload['address']
+        # buyer = payload['buyer']
         city = payload['city']
         state = payload['state']
         country = payload['country']
@@ -247,7 +250,7 @@ class CreateOrderAPIView(generics.CreateAPIView):
         
 
         order = CartOrder.objects.create(
-
+            buyer=user,
             full_name=full_name,
             email= email,
             mobile=mobile,
@@ -255,7 +258,6 @@ class CreateOrderAPIView(generics.CreateAPIView):
             city=city,
             state=state,
             country=country,
-
         )
 
         for c in cart_items:
