@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiInstance from "../../utils/axios";
 import GetCurrentAddress from "../plugin/UserCountry";
 import UserData from "../plugin/UserData";
@@ -16,6 +16,8 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
+  const navigate = useNavigate()
+
   const [colorValue, setColorValue] = useState("No Color");
   const [sizeValue, setSizeValue] = useState("No Size");
   const [qtyValue, setQtyValue] = useState(1);
@@ -29,6 +31,10 @@ function Products() {
   const currentAddress = GetCurrentAddress();
   const userData = UserData();
   const cart_id = CartID();
+
+  const handleCategoryClick = (categoryTitle) => {
+    navigate(`/category/${categoryTitle}`);
+  };
 
   useEffect(() => {
     apiInstance.get(`products/`).then((response) => {
@@ -144,7 +150,7 @@ function Products() {
       <div className="row justify-content-center mt-5 pt-3" style={{marginRight: "0px"}}>
         {category?.map((c, index) => (
           <div key={index} className="col-lg-2 mb-5">
-            <div className="text-center">
+            <div className="text-center" style={{cursor : 'pointer'}}  onClick={() => handleCategoryClick(c.title)}>
               <img
                 src={c.image}
                 style={{

@@ -91,11 +91,13 @@ export const setUser = async () => {
 export const setAuthUser = (access_token, refresh_token) =>{
     Cookies.set('access_token', access_token,{
         expires: 1,
-        secure: true
+        secure: true,
+        sameSite: 'Strict',
     } )
     Cookies.set('refresh_token', refresh_token,{
         expires: 7,
-        secure: true
+        secure: true,
+        sameSite: 'Strict',
     } )
  const user = jwt_decode(access_token) ?? null
 
@@ -118,7 +120,7 @@ export const getRefreshToken = async () => {
 export const isAccessTokenExpired = (accessToken) => {
     try{
         const decodedToken = jwt_decode(accessToken)
-        return decodedToken.exp < Date.now() /100
+        return decodedToken.exp < Date.now() /10000
     }catch (error){
         console.log(error);
         return true

@@ -23,11 +23,11 @@ import CartID from './views/plugin/cartID'
 import UserData from './views/plugin/UserData'
 import apiInstance from './utils/axios'
 
+import Category from './views/category/Category.jsx'
 
 function App() {
 
   const [count,setCount] = useState(0)
-
   const [cartCount, setCartCount] = useState()
 
   const cart_id = CartID()
@@ -38,44 +38,43 @@ function App() {
     apiInstance.get(url).then((res) => {
       setCartCount(res.data.length)
     })
-    
   })
   
-
   return (
-
     <CartContext.Provider value={[cartCount, setCartCount]}>
-      
-     
       <BrowserRouter>
-     <StoreHeader />
-    
-      <Routes>
-        <Route path='/login' element={<Login/>} />
-        <Route path='/register' element={<Register/>} />
-        <Route path='/dashboard' element={<Dashboard/>} />
-        <Route path='/logout' element={<Logout/>} />
-        <Route path='/forgot-password' element={<ForgotPassword/>} />
-        <Route path='/create-new-password' element={<CreatePassword/>} />
-        
-        {/* Store components  */}
-        <Route path='/' element={<Products />} />
-        <Route path='/detail/:slug/' element={<ProductDetail/>} />
-        <Route path='/cart/' element={<Cart/>} />
-        <Route path='/checkout/:order_oid/' element={<Checkout />} />
-        <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
+        <StoreHeader />
+        <Routes>
+          <Route path='/login' element={<Login/>} />
+          <Route path='/register' element={<Register/>} />
+          <Route path='/dashboard' element={<Dashboard/>} />
+          <Route path='/logout' element={<Logout/>} />
+          <Route path='/forgot-password' element={<ForgotPassword/>} />
+          <Route path='/create-new-password' element={<CreatePassword/>} />
+          
+          {/* Store components  */}
+          <Route path='/' element={<Products />} />
+          <Route path='/detail/:slug/' element={<ProductDetail/>} />
+          <Route path='/cart/' element={<Cart/>} />
+          <Route path='/checkout/:order_oid/' element={<Checkout />} />
+          <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
 
-        {/* Customer Routes */}
-        <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
-        <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
-        <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
-        
-
-      </Routes>
-     <StoreFooter />
-    
+          {/* Category Routes */}
+          <Route path='/category/Bed' element={<Category  title="Bed"/>} />
+          <Route path='/category/Couch' element={<Category title="Couch"/>} />
+          <Route path='/category/Desk' element={<Category title="Desk"/>} />
+          <Route path='/category/Dinner Table' element={<Category title="Dinner Table"/>} />
+          <Route path='/category/Office Chair' element={<Category title="Office Chair"/>} />
+          <Route path='/category/Storage' element={<Category title="Storage"/>} />
+          {/* Ajoutez ici des routes pour les autres catégories */}
+          
+          {/* Customer Routes */}
+          <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
+          <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
+          <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
+        </Routes>
+        <StoreFooter />
       </BrowserRouter>
-
     </CartContext.Provider>  
   )
 }
