@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import Login from './views/auth/Login'
 import Register from './views/auth/Register'
@@ -19,15 +19,36 @@ import Account from './views/customer/Account'
 import PrivateRoutes from './layout/PrivateRoute'
 import Orders from './views/customer/Orders'
 import OrderDetail from './views/customer/OrderDetail'
-
+import CartID from './views/plugin/cartID'
+import UserData from './views/plugin/UserData'
+import apiInstance from './utils/axios'
 
 
 function App() {
+
+  const [count,setCount] = useState(0)
+
+  const [cartCount, setCartCount] = useState()
+
+  const cart_id = CartID()
+  const userData = UserData()
+
+  useEffect(() =>  {
+    const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/`: `cart-list/${cart_id}/`
+    apiInstance.get(url).then((res) => {
+      setCartCount(res.data.length)
+    })
+    
+  })
   
 
   return (
-    <BrowserRouter>
-    <StoreHeader />
+
+    <CartContext.Provider value={[cartCount, setCartCount]}>
+      
+     
+      <BrowserRouter>
+     <StoreHeader />
     
       <Routes>
         <Route path='/login' element={<Login/>} />
@@ -51,9 +72,11 @@ function App() {
         
 
       </Routes>
-      <StoreFooter />
+     <StoreFooter />
     
-    </BrowserRouter>
+      </BrowserRouter>
+
+    </CartContext.Provider>  
   )
 }
 

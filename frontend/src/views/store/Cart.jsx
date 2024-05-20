@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import apiInstance from '../../utils/axios';
 import UserData from '../plugin/UserData'
@@ -7,6 +7,7 @@ import CartID from '../plugin/cartID'
 import GetCurrentAddress from '../plugin/UserCountry';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { CartContext } from '../plugin/Context';
 
 const Toast = Swal.mixin({
   toast:true,
@@ -31,7 +32,7 @@ function Cart() {
   const [country, setCountry] = useState ("")
 
 
-  // console.log("CART : ", cart);
+  const [cartCount, setCartCount] = useContext(CartContext)
 
 
   const userData = UserData()
@@ -42,7 +43,8 @@ function Cart() {
     const url = userId ? `cart-list/${cartId}/${userId}/`: `cart-list/${cartId}/`
     apiInstance.get(url).then((res) => {
       setCart(res.data)
-      // console.log("", res.data)
+      setCartCount(res.data.length)
+      
     })
   }
   const fetchCartTotal = (cartId, userId) => {

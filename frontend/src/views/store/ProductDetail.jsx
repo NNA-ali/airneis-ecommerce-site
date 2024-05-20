@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 
@@ -34,6 +34,8 @@ function ProductDetail() {
     const [colorImage, setColorImage] = useState("image-url.jpg")
     const [sizeValue, setSizeValue] = useState("Our Size")
     const [qtyValue, setQtyValue] = useState(1)
+
+    const [cartCount, setCartCount] = useContext(CartContext)
 
     const [cartData, setCartData] = useState({});
     const [totalCartItems, setTotalCartItems] = useState(0);
@@ -120,6 +122,12 @@ function ProductDetail() {
     try {
       const response = await apiInstance.post(`cart-view/`, formdata);
       console.log(response.data);
+      
+      //fetch updated cart items
+      const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/`: `cart-list/${cart_id}/`
+      apiInstance.get(url).then((res) => {
+        setCartCount(res.data.length)
+    })
   
        Swal.fire({
         icon:"success",

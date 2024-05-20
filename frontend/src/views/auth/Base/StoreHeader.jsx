@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
+import React, {useState, useContext} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/auth";
 import { useEffect } from "react";
+import { CartContext } from "../../plugin/Context";
+
 
 
 function StoreHeader() {
@@ -9,6 +12,8 @@ function StoreHeader() {
     state.user,
   ])
 
+  const cartCount = useContext(CartContext)
+  console.log(cartCount);
   
   return (
     <div>
@@ -135,7 +140,7 @@ function StoreHeader() {
             }
             <Link className="btn btn-danger" to="/cart/">
               <i className="fas fa-shopping-cart"></i>{" "}
-              <span id="cart-total-items">0</span>
+              <span id="cart-total-items">{cartCount}</span>
             </Link>
           </div>
         </div>

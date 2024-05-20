@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import apiInstance from "../../utils/axios";
 import GetCurrentAddress from "../plugin/UserCountry";
@@ -6,6 +6,7 @@ import UserData from "../plugin/UserData";
 import CartID from "../plugin/cartID";
 import Swal from "sweetalert2";
 import { Carousel } from 'react-bootstrap';
+import { CartContext } from "../plugin/Context";
 
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -22,6 +23,8 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedColors, setSelectedColors] = useState({});
   const [selectedSize, setSelectedSize] = useState({});
+  
+  const [cartCount, setCartCount] = useContext(CartContext)
 
   const currentAddress = GetCurrentAddress();
   const userData = UserData();
@@ -81,6 +84,12 @@ function Products() {
 
     try {
       const response = await apiInstance.post(`cart-view/`, formdata);
+      
+      const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/`: `cart-list/${cart_id}/`
+      apiInstance.get(url).then((res) => {
+        setCartCount(res.data.length)
+    })
+
       Swal.fire({
         icon: "success",
         title: response.data.message,
