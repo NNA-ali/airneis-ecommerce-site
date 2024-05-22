@@ -38,8 +38,10 @@ function Products() {
 
   useEffect(() => {
     apiInstance.get(`products/`).then((response) => {
-      setProducts(response.data);
+      const featuredProducts = response.data.filter(product => product.featured);
+      setProducts(featuredProducts);
     });
+    console.log("prod : ", products);
   }, []);
 
   useEffect(() => {
@@ -196,7 +198,7 @@ function Products() {
                         <h5 className="card-title mb-3">{product.title}</h5>
                       </Link>
                       <a href="" className="text-reset">
-                        <product>{product.category.title}</product>
+                        <div>{product.category.title}</div>
                       </a>
                       <div className="d-flex justify-content-center">
                         <h6 className="mb-3">{product.price}€ </h6>
@@ -208,7 +210,8 @@ function Products() {
                       <br />
                       <div className="btn-group">
                         <button
-                          className="btn btn-primary dropdown-toggle"
+                          style={product.in_stock ? {} : {backgroundColor : 'grey', borderColor : "grey"}}
+                          className ={ product.in_stock ? "btn btn-primary dropdown-toggle" : "btn btn-primary dropdown-toggle disabled"}
                           type="button"
                           id="dropdownMenuClickable"
                           data-bs-toggle="dropdown"
@@ -326,12 +329,8 @@ function Products() {
                             </button>
                           </div>
                         </ul>
-                        <button
-                          type="button"
-                          className="btn btn-danger px-3 me-1 ms-2"
-                        >
-                          <i className="fas fa-heart" />
-                        </button>
+                       
+                        <div> {product.in_stock ? "in stock" : "out of stock"} </div>
                       </div>
                     </div>
                   </div>

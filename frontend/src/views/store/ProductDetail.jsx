@@ -31,6 +31,7 @@ function ProductDetail() {
     const [darkMode, setDarkMode] = useState(false);
 
     const [colorValue, setColorValue] = useState("Our Color")
+    const [selectedColors, setSelectedColors] = useState({});
     const [colorImage, setColorImage] = useState("image-url.jpg")
     const [sizeValue, setSizeValue] = useState("Our Size")
     const [qtyValue, setQtyValue] = useState(1)
@@ -75,19 +76,14 @@ function ProductDetail() {
     // ================== Adding Product to Cart ==================== //
 
     // Get color value after clicking on a button
-    const handleColorButtonClick = (event) => {
-        // Find the closest hidden input with class 'color_name' to the clicked button
-        const colorNameInput = event.target.closest('.color_button').parentNode.querySelector('.color_name');
-        const colorImageInput = event.target.closest('.color_button').parentNode.querySelector('.color_image');
-
-        if (colorNameInput) {
-            const colorName = colorNameInput.value;
-            const colorImage = colorImageInput.value;
-            setColorValue(colorName)
-            setProductImage(colorImage)
-             window.location.href = `/product/${params.slug}?color=${colorName}`;
-        }
-    };
+    const handleColorButtonClick = (event, product_id, colorName) => {
+        setColorValue(colorName);
+        setSelectedProduct(product_id);
+        setSelectedColors((prevSelectedColors) => ({
+          ...prevSelectedColors,
+          [product_id]: colorName,
+        }));
+      };
 
     const handleSizeButtonClick = (event,size) => {
         // Find the closest hidden input with class 'color_name' to the clicked button
@@ -405,22 +401,14 @@ function ProductDetail() {
                                                 )}
                                             </div>
                                             <button
-                        type="button"
-                        className="btn btn-primary me-1 mb-1"
+                        type="button "
+                        style={product.in_stock ? {} : {backgroundColor : 'grey', borderColor : "grey"}}
+                        className= { product.in_stock ?"btn btn-primary me-1 mb-1" : "btn btn-primary me-1 mb-1 disabled"}
                         onClick={() => handleAddToCart(product.id, product.price, product.shipping_amount)}
                       >
-                        <i className="fas fa-shopping-cart" />
+                        <i className="fas fa-shopping-cart " />
                       </button>
-                          {wishlistLoading === true &&
-                            <button onClick={handleAddToWishlist} className="btn btn-danger btn-floating" data-mdb-toggle="tooltip" title="Add to wishlist" >
-                             <i className="fas fa-heart" />
-                           </button>
-                                            }
-                                            {wishlistLoading === false &&
-                                                <button onClick={handleAddToWishlist} className="btn btn-secondary btn-floating" data-mdb-toggle="tooltip" title="Add to wishlist" >
-                                                    <i className="fas fa-heart" />
-                                                </button>
-                                            }
+                        
                                         </div>
                                     </div>
                                     {/* Details */}
