@@ -3,11 +3,12 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from userauths.models import User
-from store.models import Category,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
-from store.serializers import ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer, NotificationSerializer
+from store.models import Category, Contact,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon , Contact
+from store.serializers import ContactSerializer, ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer, NotificationSerializer,ContactSerializer
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
 from rest_framework import generics
+from rest_framework.views import APIView
 
 
 from rest_framework import generics, status
@@ -454,7 +455,26 @@ class PaymentSuccessView(generics.CreateAPIView):
                 return Response({"message":"An Error Occured, Try Again.."})
 
         else:
-            session = None    
+            session = None 
+
+class ContactAPIView(APIView):
+    serializer_class = ContactSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ContactSerializer(data=request.data)
+        if serializer.is_valid():
+            # Données validées
+            full_name = serializer.validated_data['full_name']
+            message = serializer.validated_data['message']
+            print("IS AUTHENC /", request.user.is_authenticated)
+            # user = request.user if request.user.is_authenticated else None  # Gérer le cas où l'utilisateur n'est pas connecté
+            user = User.objects.get(email=serializer.validated_data['user'])
+            # Créez une instance de Contact et enregistrez-la dans la base de données
+            Contact.objects.create(user=user, full_name=full_name, message=message)
+            
+            return Response({"success": True, "message": "Message sent successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
                   
 

@@ -6,7 +6,7 @@ from .models import CarouselImage
 
 
 
-from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon
+from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon, Contact
 from vendor.models import Vendor
 class CategorySerializer(serializers.ModelSerializer):
 
@@ -248,3 +248,9 @@ class CarouselImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarouselImage
         fields = ['id', 'title', 'image']
+
+class ContactSerializer(serializers.Serializer):
+    
+    user = serializers.EmailField(required=True)
+    message = serializers.CharField(required=True, max_length=2000)
+    full_name = serializers.CharField(required=True)

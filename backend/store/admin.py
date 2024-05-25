@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from store.models import Product, Tax, Category, Gallery , Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon, Wishlist
+from store.models import Product, Tax, Category, Gallery , Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon, Wishlist, Contact
 
 class GalleryInline(admin.TabularInline):
     model = Gallery
@@ -72,6 +72,17 @@ class NotificationAdmin(admin.ModelAdmin):
     list_editable = ['seen']
     list_display = ['order', 'seen', 'user', 'vendor', 'date']
 
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'user', 'message', 'date']
+    search_fields = ['full_name', 'message']
+    list_filter = ['date']
+
+
+
+    
+
+
+
 
 
 admin.site.register(Category)
@@ -85,3 +96,4 @@ admin.site.register(Wishlist)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(Review, ProductReviewAdmin)
 admin.site.register(Tax)
+admin.site.register(Contact, ContactAdmin)

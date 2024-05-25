@@ -1,8 +1,8 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom';
 function StoreFooter() {
   return (
-    <div >
+    <div>
       <footer className="bg-light text-center text-lg-start">
         {/* Grid container */}
         <div className="container-fluid p-4">
@@ -67,10 +67,11 @@ function StoreFooter() {
                 <strong>About us</strong>
               </p>
               <p>
-              Welcome to Airneis, your online destination for quality furniture.
-               We offer a carefully curated selection to enhance your living space. 
-               Explore our collection today and let us help you create the home of your dreams. 
-              At Airneis, style and quality are our commitment.
+                Welcome to Airneis, your online destination for quality
+                furniture. We offer a carefully curated selection to enhance
+                your living space. Explore our collection today and let us help
+                you create the home of your dreams. At Airneis, style and
+                quality are our commitment.
               </p>
             </div>
             {/*Grid column*/}
@@ -110,36 +111,35 @@ function StoreFooter() {
               </p>
               <ul className="list-unstyled">
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Storage" className="text-dark">
                     Storage
                   </a>
                 </li>
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Bed" className="text-dark">
                     Bed
                   </a>
                 </li>
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Couch" className="text-dark">
                     Couch
                   </a>
                 </li>
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Desk" className="text-dark">
                     Desk
                   </a>
                 </li>
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Dinner Table" className="text-dark">
                     Dinner Table
                   </a>
                 </li>
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/Category/Office Chair" className="text-dark">
                     Office Chair
                   </a>
                 </li>
-                
               </ul>
             </div>
             {/*Grid column*/}
@@ -149,11 +149,10 @@ function StoreFooter() {
                 <strong>Support</strong>
               </p>
               <ul className="list-unstyled">
-               
                 <li>
-                  <a href="#!" className="text-dark">
+                  <Link to="/customer/contact" className="text-dark">
                     Help center
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#!" className="text-dark">
@@ -184,9 +183,8 @@ function StoreFooter() {
         </div>
         {/* Copyright */}
       </footer>
-
     </div>
-  )
+  );
 }
 
 export default StoreFooter

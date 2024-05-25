@@ -22,7 +22,7 @@ import OrderDetail from './views/customer/OrderDetail'
 import CartID from './views/plugin/cartID'
 import UserData from './views/plugin/UserData'
 import apiInstance from './utils/axios'
-
+import Contact from './views/customer/Contact.jsx'
 import Category from './views/category/Category.jsx'
 
 function App() {
@@ -66,11 +66,13 @@ function App() {
           <Route path='/category/Dinner Table' element={<Category title="Dinner Table"/>} />
           <Route path='/category/Office Chair' element={<Category title="Office Chair"/>} />
           <Route path='/category/Storage' element={<Category title="Storage"/>} />
-          {/* Ajoutez ici des routes pour les autres catégories */}
+         
           
           {/* Customer Routes */}
+          <Route path='/customer/contact/' element={<PrivateRoutes> <Contact /></PrivateRoutes> } />
           <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
           <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
+         
           <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
         </Routes>
         <StoreFooter />

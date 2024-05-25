@@ -335,3 +335,16 @@ class CarouselImage(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    message = models.TextField(max_length=1000)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.user.email}"  # Utilise l'email de l'utilisateur associé
+
+    class Meta:
+        verbose_name_plural = "Contacts"

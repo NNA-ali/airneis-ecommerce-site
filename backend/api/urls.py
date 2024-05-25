@@ -10,6 +10,7 @@ from customer import views as customer_views
 
 
 
+
 urlpatterns = [
     path('user/token/', userauths_views.MyTokenObtainPairView.as_view()),
     path('user/token/refresh/',TokenRefreshView.as_view()),
@@ -36,7 +37,9 @@ urlpatterns = [
     path('stripe-checkout/<order_oid>/',store_views.StripeCheckoutView.as_view()),
     path('payment-success/<order_oid>/',store_views.PaymentSuccessView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/', store_views.CartItemDeleteAPIView.as_view()),
+    path('contact/', store_views.ContactAPIView.as_view()),
     #Customer Endpoints
+    
     path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
     path('customer/order/<user_id>/<order_oid>/', customer_views.OrderDetailAPIView.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),

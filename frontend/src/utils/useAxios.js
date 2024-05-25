@@ -1,31 +1,28 @@
-import axios from "axios"
-import { isAccessTokenExpired, setAuthUser, getRefreshToken } from "./auth"
-import { BASE_URL } from "./constants"
-import Cookies from "js-cookie"
- 
-const useAxios = async () => {
-    const access_Token = Cookies.get('access_token');
-    const refresh_Token = Cookies.get('refresh_token');
+import axios from "axios";
+import { isAccessTokenExpired, setAuthUser, getRefreshToken } from "./auth";
+import { BASE_URL } from "./constants";
+import Cookies from "js-cookie";
 
-    const axiosInstance = axios.create({
-        baseURL: BASE_URL,
-        headers: {Authorization: 'Bearer ${access_Token}'},
+const useAxios = () => {
+  const access_Token = Cookies.get("access_token");
+  const refresh_Token = Cookies.get("refresh_token");
 
-    });
-    axiosInstance.interceptors.request.use(async (req) => {
-        if ( !isAccessTokenExpired (access_Token)){
-              return req
-        }
-      
-        const response = await getRefreshToken(refresh_Token)
-    setAuthUser(response.access, response.refresh)
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: { Authorization: `Bearer ${access_Token}` },
+  });
+  axiosInstance.interceptors.request.use(async (req) => {
+    if (!isAccessTokenExpired(access_Token)) {
+      return req;
+    }
 
-    req.headers.Authorization = 'Bearer ${response.data.access}';
-    return req
+    const response = await getRefreshToken(refresh_Token);
+    setAuthUser(response.access, response.refresh);
 
-    })
-   return axiosInstance
-    
-}
+    req.headers.Authorization = `Bearer ${response.data.access}`;
+    return req;
+  });
+  return axiosInstance;
+};
 
-export default useAxios
+export default useAxios;
