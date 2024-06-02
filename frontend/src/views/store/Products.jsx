@@ -134,7 +134,7 @@ function Products() {
     <div
       className={darkMode ? "dark-mode" : "light-mode"}
       style={
-        darkMode ? { backgroundColor: "#1e1e1e" } : { backgroundColor: "#fff" }
+        darkMode ? { backgroundColor: "#1e1e1e" } : { backgroundColor: "transparent" }
       }
     >
       {darkMode ? (
@@ -251,11 +251,11 @@ function Products() {
                   key={index}
                   style={
                     !darkMode
-                      ? { backgroundColor: "#fff" }
+                      ? { backgroundColor: "transparent"}
                       : { backgroundColor: "#1e1e1e" }
                   }
                 >
-                  <div className="card" style={{ borderRadius: "30px" }}>
+                  <div className="card" style={darkMode ? {borderRadius: "30px", backgroundColor : '#1e1e1e', border : "1px solid grey"} : {borderRadius: "30px", backgroundColor : 'transparent', border : '1px solid #1e1e1e'}}>
                     <div
                       className="bg-image hover-zoom ripple"
                       data-mdb-ripple-color="light"
@@ -263,7 +263,7 @@ function Products() {
                       <br
                         style={
                           !darkMode
-                            ? { backgroundColor: "#fff" }
+                            ? { backgroundColor: "transparent" }
                             : { backgroundColor: "#1e1e1e" }
                         }
                       ></br>
@@ -279,8 +279,8 @@ function Products() {
                       className="card-body"
                       style={
                         !darkMode
-                          ? { backgroundColor: "#fff", color: "#1e1e1e" }
-                          : { backgroundColor: "#1e1e1e", color: "#fff" }
+                          ? { backgroundColor: "transparent", color: "#1e1e1e" }
+                          : { backgroundColor: "transparent", color: "#fff" }
                       }
                     >
                       <Link
@@ -432,15 +432,9 @@ function Products() {
                           </div>
                         </ul>
 
-                        <div style={{ marginTop: '10px' }}>
+                        <div style={{ marginleft: '100px', display : 'flex', justifyContent : 'center', alignItems : "center" }}>
                           <div 
-                            style={
-                              
-                              product.in_stock
-                                ? styles.inStock
-                                : styles.outOfStock
-                               
-                            }
+                            style={product.in_stock ? {...styles.inStock, marginLeft : '10px'} : {...styles.outOfStock, marginLeft : '10px'}}
                           >
                             {product.in_stock ? "in stock" : "out of stock"}
                           </div>
