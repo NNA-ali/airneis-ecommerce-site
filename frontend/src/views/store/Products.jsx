@@ -5,18 +5,18 @@ import GetCurrentAddress from "../plugin/UserCountry";
 import UserData from "../plugin/UserData";
 import CartID from "../plugin/cartID";
 import Swal from "sweetalert2";
-import { Carousel } from 'react-bootstrap';
+import { Carousel } from "react-bootstrap";
 import { CartContext } from "../plugin/Context";
 
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 function Products() {
   const [category, setCategory] = useState([]);
   const [products, setProducts] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [colorValue, setColorValue] = useState("No Color");
   const [sizeValue, setSizeValue] = useState("No Size");
@@ -25,8 +25,8 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedColors, setSelectedColors] = useState({});
   const [selectedSize, setSelectedSize] = useState({});
-  
-  const [cartCount, setCartCount] = useContext(CartContext)
+
+  const [cartCount, setCartCount] = useContext(CartContext);
 
   const currentAddress = GetCurrentAddress();
   const userData = UserData();
@@ -38,7 +38,9 @@ function Products() {
 
   useEffect(() => {
     apiInstance.get(`products/`).then((response) => {
-      const featuredProducts = response.data.filter(product => product.featured);
+      const featuredProducts = response.data.filter(
+        (product) => product.featured
+      );
       setProducts(featuredProducts);
     });
     console.log("prod : ", products);
@@ -92,11 +94,13 @@ function Products() {
 
     try {
       const response = await apiInstance.post(`cart-view/`, formdata);
-      
-      const url = userData ? `cart-list/${cart_id}/${userData?.user_id}/`: `cart-list/${cart_id}/`
+
+      const url = userData
+        ? `cart-list/${cart_id}/${userData?.user_id}/`
+        : `cart-list/${cart_id}/`;
       apiInstance.get(url).then((res) => {
-        setCartCount(res.data.length)
-    })
+        setCartCount(res.data.length);
+      });
 
       Swal.fire({
         icon: "success",
@@ -106,16 +110,61 @@ function Products() {
       console.error("Erreur lors de l'ajout du produit au panier:", error);
     }
   };
-
+  const styles = {
+    inStock: {
+      color: "green",
+      fontWeight: "bold",
+      animation: "pulse 2s infinite",
+    },
+    outOfStock: {
+      color: "red",
+      fontWeight: "bold",
+      textDecoration: "line-through",
+      opacity: 0.7,
+    },
+    pulseKeyframes: `
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+    `,
+  };
   return (
-    <div className={darkMode ? "dark-mode" : "light-mode"} style={darkMode ? {backgroundColor : '#1e1e1e'} : {backgroundColor : "#fff"}}>
-        {darkMode ? <LightModeIcon onClick={toggleDarkMode} style={{color : "white", cursor : "pointer", width : "40px", height : "40px"}} /> : <DarkModeIcon onClick={toggleDarkMode} style={{cursor : "pointer", width : "40px", height : "40px"}}  />}
-      <Carousel style={{paddingRight : "0px"}}>
+    <div
+      className={darkMode ? "dark-mode" : "light-mode"}
+      style={
+        darkMode ? { backgroundColor: "#1e1e1e" } : { backgroundColor: "#fff" }
+      }
+    >
+      {darkMode ? (
+        <LightModeIcon
+          onClick={toggleDarkMode}
+          style={{
+            color: "white",
+            cursor: "pointer",
+            width: "40px",
+            height: "40px",
+          }}
+        />
+      ) : (
+        <DarkModeIcon
+          onClick={toggleDarkMode}
+          style={{ cursor: "pointer", width: "40px", height: "40px" }}
+        />
+      )}
+      <Carousel style={{ paddingRight: "0px" }}>
         <Carousel.Item>
           <img
             className="d-block w-100"
             src="https://img.freepik.com/photos-premium/salon-decore-meubles-minimalistes_7023-180375.jpg?w=996"
-            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px' }}
+            style={{
+              maxWidth: "90%",
+              margin: "0 auto",
+              paddingLeft: "50px",
+              paddingRight: "50px",
+              paddingTop: "60px",
+            }}
             alt="Image 3"
           />
           <Carousel.Caption>
@@ -126,8 +175,14 @@ function Products() {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/San-Marco.jpeg"  
-            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px'  }}
+            src="https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/San-Marco.jpeg"
+            style={{
+              maxWidth: "90%",
+              margin: "0 auto",
+              paddingLeft: "50px",
+              paddingRight: "50px",
+              paddingTop: "60px",
+            }}
             alt="Image 2"
           />
           <Carousel.Caption>
@@ -138,8 +193,16 @@ function Products() {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src={"https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/chaise-turri-eclipse.jpg"}
-            style={{ maxWidth: '90%', margin: '0 auto', paddingLeft: '50px', paddingRight: '50px', paddingTop:'60px' }}
+            src={
+              "https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/chaise-turri-eclipse.jpg"
+            }
+            style={{
+              maxWidth: "90%",
+              margin: "0 auto",
+              paddingLeft: "50px",
+              paddingRight: "50px",
+              paddingTop: "60px",
+            }}
             alt="Image 2"
           />
           <Carousel.Caption>
@@ -149,10 +212,17 @@ function Products() {
         </Carousel.Item>
       </Carousel>
 
-      <div className="row justify-content-center mt-5 pt-3" style={{marginRight: "0px"}}>
+      <div
+        className="row justify-content-center mt-5 pt-3"
+        style={{ marginRight: "0px" }}
+      >
         {category?.map((c, index) => (
           <div key={index} className="col-lg-2 mb-5">
-            <div className="text-center" style={{cursor : 'pointer'}}  onClick={() => handleCategoryClick(c.title)}>
+            <div
+              className="text-center"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleCategoryClick(c.title)}
+            >
               <img
                 src={c.image}
                 style={{
@@ -163,24 +233,40 @@ function Products() {
                 }}
                 alt=""
               />
-              <h6 style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}}>{c.title}</h6>
+              <h6 style={darkMode ? { color: "#fff" } : { color: "#1e1e1e" }}>
+                {c.title}
+              </h6>
             </div>
           </div>
         ))}
       </div>
 
-      <main className="mt-5" >
-        <div className="container" >
+      <main className="mt-5">
+        <div className="container">
           <section className="text-center">
-            <div className="row" >
+            <div className="row">
               {products?.map((product, index) => (
-                <div className="col-lg-4 col-md-12 mb-4" key={index} style={!darkMode ? {backgroundColor : '#fff'} : {backgroundColor : "#1e1e1e"}} >
-                  <div className="card" style= {{borderRadius:'30px'} } >
+                <div
+                  className="col-lg-4 col-md-12 mb-4"
+                  key={index}
+                  style={
+                    !darkMode
+                      ? { backgroundColor: "#fff" }
+                      : { backgroundColor: "#1e1e1e" }
+                  }
+                >
+                  <div className="card" style={{ borderRadius: "30px" }}>
                     <div
                       className="bg-image hover-zoom ripple"
                       data-mdb-ripple-color="light"
                     >
-                      <br style={!darkMode ? {backgroundColor : '#fff'} : {backgroundColor : "#1e1e1e"}}></br>
+                      <br
+                        style={
+                          !darkMode
+                            ? { backgroundColor: "#fff" }
+                            : { backgroundColor: "#1e1e1e" }
+                        }
+                      ></br>
                       <Link to={`/detail/${product.slug}/`}>
                         <img
                           src={product.image}
@@ -189,7 +275,14 @@ function Products() {
                         />
                       </Link>
                     </div>
-                    <div className="card-body"  style={  !darkMode ? {backgroundColor : '#fff', color : '#1e1e1e'} : {backgroundColor : "#1e1e1e", color : '#fff'}}>
+                    <div
+                      className="card-body"
+                      style={
+                        !darkMode
+                          ? { backgroundColor: "#fff", color: "#1e1e1e" }
+                          : { backgroundColor: "#1e1e1e", color: "#fff" }
+                      }
+                    >
                       <Link
                         to={`/detail/${product.slug}/`}
                         href=""
@@ -210,8 +303,17 @@ function Products() {
                       <br />
                       <div className="btn-group">
                         <button
-                          style={product.in_stock ? {} : {backgroundColor : 'grey', borderColor : "grey"}}
-                          className ={ product.in_stock ? "btn btn-primary dropdown-toggle" : "btn btn-primary dropdown-toggle disabled"}
+                          style={
+                            
+                            product.in_stock
+                              ? {}
+                              : { backgroundColor: "grey", borderColor: "grey" }
+                          }
+                          className={
+                            product.in_stock
+                              ? "btn btn-primary dropdown-toggle"
+                              : "btn btn-primary dropdown-toggle disabled"
+                          }
                           type="button"
                           id="dropdownMenuClickable"
                           data-bs-toggle="dropdown"
@@ -329,8 +431,21 @@ function Products() {
                             </button>
                           </div>
                         </ul>
-                       
-                        <div> {product.in_stock ? "in stock" : "out of stock"} </div>
+
+                        <div style={{ marginTop: '10px' }}>
+                          <div 
+                            style={
+                              
+                              product.in_stock
+                                ? styles.inStock
+                                : styles.outOfStock
+                               
+                            }
+                          >
+                            {product.in_stock ? "in stock" : "out of stock"}
+                          </div>
+                          <style>{styles.pulseKeyframes}</style>
+                        </div>
                       </div>
                     </div>
                   </div>

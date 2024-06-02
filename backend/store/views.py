@@ -203,11 +203,15 @@ class CartItemDeleteAPIView(generics.DestroyAPIView):
      item_id = self.kwargs['item_id']
      user_id = self.kwargs.get('user_id')
 
+     print("CARTID : ", cart_id)
+     print("USERID : ", user_id)
+     print("ITEMID : ", item_id)
+
      if user_id:
          user = User.objects.get(id=user_id)
          cart = Cart.objects.get(id=item_id, user=user)
      else:
-        cart = Cart.objects.get(id=cart_id)    
+        cart = Cart.objects.get(cart_id=cart_id)
 
      return cart
 
