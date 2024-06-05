@@ -24,6 +24,7 @@ import UserData from './views/plugin/UserData'
 import apiInstance from './utils/axios'
 import Contact from './views/customer/Contact.jsx'
 import Category from './views/category/Category.jsx'
+import CustomerNotification from './views/customer/CustomerNotification.jsx'
 
 function App() {
 
@@ -72,9 +73,10 @@ function App() {
           <Route path='/customer/contact/' element={<PrivateRoutes> <Contact /></PrivateRoutes> } />
           <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
           <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
+          <Route path='/customer/notifications/' element={<PrivateRoutes> <CustomerNotification /></PrivateRoutes> } />
          
           <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
-        </Routes>
+          </Routes>
         <StoreFooter />
       </BrowserRouter>
     </CartContext.Provider>  

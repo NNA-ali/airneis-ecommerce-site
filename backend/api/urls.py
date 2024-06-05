@@ -42,5 +42,7 @@ urlpatterns = [
     
     path('customer/orders/<user_id>/', customer_views.OrdersAPIView.as_view()),
     path('customer/order/<user_id>/<order_oid>/', customer_views.OrderDetailAPIView.as_view()),
+    path('customer/notification/<user_id>/', customer_views.CustomerNotification.as_view()),
+     path('customer/notification/<user_id>/<noti_id>/', customer_views.MarCustomerNotificationAsSeen.as_view()),
     path('cart-delete/<str:cart_id>/<int:item_id>/<int:user_id>/', store_views.CartItemDeleteAPIView.as_view()),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

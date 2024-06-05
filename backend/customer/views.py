@@ -43,6 +43,34 @@ class OrderDetailAPIView(generics.RetrieveAPIView):
         user = User.objects.get(id=user_id)
         order = CartOrder.objects.get(buyer=user, oid=order_oid)
         return order
+    
+class CustomerNotification(generics.ListAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+
+        user = User.objects.get(id=user_id)
+        return Notification.objects.filter(user=user, seen=False)
+    
+class MarCustomerNotificationAsSeen(generics.RetrieveAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        noti_id = self.kwargs['noti_id']
+
+        user = User.objects.get(id=user_id)
+        noti = Notification.objects.get(id=noti_id, user=user)
+
+        if noti.seen != True:
+            noti.seen = True
+            noti.save()
+        return noti    
+
+
 
 
 
