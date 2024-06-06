@@ -25,6 +25,9 @@ import apiInstance from './utils/axios'
 import Contact from './views/customer/Contact.jsx'
 import Category from './views/category/Category.jsx'
 import CustomerNotification from './views/customer/CustomerNotification.jsx'
+import CustomerSettings from './views/customer/Settings.jsx'
+import Policy from './views/auth/Base/Policy.jsx'
+
 
 function App() {
 
@@ -59,6 +62,7 @@ function App() {
           <Route path='/cart/' element={<Cart/>} />
           <Route path='/checkout/:order_oid/' element={<Checkout />} />
           <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
+          <Route path='/policy/' element={<Policy/>} />
 
           {/* Category Routes */}
           <Route path='/category/Bed' element={<Category  title="Bed"/>} />
@@ -74,6 +78,7 @@ function App() {
           <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
           <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
           <Route path='/customer/notifications/' element={<PrivateRoutes> <CustomerNotification /></PrivateRoutes> } />
+          <Route path='/customer/settings/' element={<PrivateRoutes> <CustomerSettings /></PrivateRoutes> } />
          
           <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
           </Routes>

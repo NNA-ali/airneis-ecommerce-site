@@ -82,7 +82,7 @@ function StoreFooter() {
               </p>
               <ul className="list-unstyled mb-0">
                 <li>
-                  <a href="#!" className="text-dark">
+                  <a href="/policy" className="text-dark">
                     Privacy policy
                   </a>
                 </li>

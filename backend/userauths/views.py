@@ -76,7 +76,7 @@ class PasswordChangeView(generics.CreateAPIView):
             else:
                 return Response({"message": "User Does not Exists"}, status=status.HTTP_404_NOT_FOUND)
 
-class ProfileView(generics.RetrieveAPIView):
+class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [AllowAny]
 
