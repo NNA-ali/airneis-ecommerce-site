@@ -27,6 +27,7 @@ import Category from './views/category/Category.jsx'
 import CustomerNotification from './views/customer/CustomerNotification.jsx'
 import CustomerSettings from './views/customer/Settings.jsx'
 import Policy from './views/auth/Base/Policy.jsx'
+import Invoice from './views/customer/Invoice.jsx'
 
 
 function App() {
@@ -79,6 +80,7 @@ function App() {
           <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
           <Route path='/customer/notifications/' element={<PrivateRoutes> <CustomerNotification /></PrivateRoutes> } />
           <Route path='/customer/settings/' element={<PrivateRoutes> <CustomerSettings /></PrivateRoutes> } />
+          <Route path='/customer/invoice/:order_oid/' element={<PrivateRoutes> <Invoice /></PrivateRoutes> } />
          
           <Route path='/customer/orders/:order_oid/' element={<PrivateRoutes> <OrderDetail /></PrivateRoutes> } />
           </Routes>
