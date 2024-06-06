@@ -1,26 +1,28 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/auth";
 import { useEffect } from "react";
 import { CartContext } from "../../plugin/Context";
 
-
-
 function StoreHeader() {
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
-  ])
+  ]);
 
-  const cartCount = useContext(CartContext)
+  const cartCount = useContext(CartContext);
   console.log(cartCount);
-  
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
           <Link className="navbar-brand" to="/">
-            <h1>Airneis</h1>
+            <img
+              src="https://airneis-ecommerce-bucket.s3.eu-north-1.amazonaws.com/static/vendor/Logo4_airneis_store-removebg-preview.png"
+              alt="Airneis Logo"
+              style={{ height: "40px", width: "auto", objectFit: "contain" }}
+            />
           </Link>
           <button
             className="navbar-toggler"
@@ -36,20 +38,18 @@ function StoreHeader() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {/* <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
-                                    Pages
-                                </a>
-                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">About Us</a></li>
-                                    <li><a className="dropdown-item" href="#">Contact Us</a></li>
-                                    <li><a className="dropdown-item" href="#">Blog </a></li>
-                                    <li><a className="dropdown-item" href="#">Changelog</a></li>
-                                    <li><a className="dropdown-item" href="#">Terms & Condition</a></li>
-                                    <li><a className="dropdown-item" href="#">Cookie Policy</a></li>
-
-                                </ul>
-                            </li> */}
-
+                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Pages
+                </a>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a className="dropdown-item" href="#">About Us</a></li>
+                  <li><a className="dropdown-item" href="#">Contact Us</a></li>
+                  <li><a className="dropdown-item" href="#">Blog</a></li>
+                  <li><a className="dropdown-item" href="#">Changelog</a></li>
+                  <li><a className="dropdown-item" href="#">Terms & Condition</a></li>
+                  <li><a className="dropdown-item" href="#">Cookie Policy</a></li>
+                </ul>
+              </li> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -77,7 +77,6 @@ function StoreHeader() {
                       <i className="fas fa-home"></i> Home
                     </Link>
                   </li>
-                  
                   <li>
                     <Link
                       className="dropdown-item"
@@ -93,11 +92,7 @@ function StoreHeader() {
                   </li>
                 </ul>
               </li>
-
-              <li className="nav-item dropdown">
-               
-                
-              </li>
+              <li className="nav-item dropdown"></li>
             </ul>
             <div className="d-flex">
               <input
@@ -116,29 +111,25 @@ function StoreHeader() {
                 Search
               </button>
             </div>
-            
-            
-            {isLoggedIn()
-               ?
-                <>
-                  <Link className="btn btn-primary me-2" to="/logout">
-                 Logout
-                  </Link>
-                  <Link className="btn btn-primary me-2" to="/Dashboard">
-                 Dashboard
-                  </Link>
-                </>
-               :
-               <>
-                  <Link className="btn btn-primary me-2" to="/login">
-                 login
-                  </Link>
-                  <Link className="btn btn-primary me-2" to="/Register">
-                 Register
-                  </Link>
-                </>
-
-            }
+            {isLoggedIn() ? (
+              <>
+                <Link className="btn btn-primary me-2" to="/logout">
+                  Logout
+                </Link>
+                <Link className="btn btn-primary me-2" to="/Dashboard">
+                  Dashboard
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link className="btn btn-primary me-2" to="/login">
+                  login
+                </Link>
+                <Link className="btn btn-primary me-2" to="/Register">
+                  Register
+                </Link>
+              </>
+            )}
             <Link className="btn btn-danger" to="/cart/">
               <i className="fas fa-shopping-cart"></i>{" "}
               <span id="cart-total-items">{cartCount}</span>
