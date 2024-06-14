@@ -24,6 +24,7 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Category"
         ordering = ['title']
+        
 class Product(models.Model):
         
         STATUS = (
@@ -53,6 +54,7 @@ class Product(models.Model):
         pid = ShortUUIDField(unique=True, length=10, alphabet="abcdefg12345")
         slug = models.SlugField(unique=True)
         date = models.DateTimeField(auto_now_add=True)
+        material = models.CharField(max_length=1000, null=True, blank=True)
 
         def save(self, *args, **kwargs):
             if self.slug == "" or self.slug == None:
@@ -109,7 +111,13 @@ class Specification(models.Model):
 
      def __str__(self):
             return self.title
+     
+class Material(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='materials')
+    name = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return self.name
 
 class Size(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -282,13 +290,7 @@ def update_product_rating(sender, instance, **kwargs):
 
 
 
-class Wishlist(models.Model):
-     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-     date = models.DateTimeField(auto_now_add=True)
 
-     def __str__(self):
-              return self.product.title
          
 class Notification(models.Model):
      user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -303,7 +305,7 @@ class Notification(models.Model):
                return self.order.oid
           else:
                return "Notification"
-
+#coupon 
 class Coupon(models.Model):
      vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
      user_by = models.ManyToManyField(User, blank=True)
@@ -344,7 +346,7 @@ class Contact(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.full_name} - {self.user.email}"  # Utilise l'email de l'utilisateur associé
+        return f"{self.full_name} - {self.user.email}"  
 
     class Meta:
         verbose_name_plural = "Contacts"

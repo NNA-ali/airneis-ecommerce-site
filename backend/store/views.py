@@ -478,7 +478,92 @@ class ContactAPIView(APIView):
             Contact.objects.create(user=user, full_name=full_name, message=message)
             
             return Response({"success": True, "message": "Message sent successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
-                  
+class SearchProductAPIView(generics.ListCreateAPIView):
 
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        query= self.request.GET.get("query")
+        products = Product.objects.filter(status="published", title__icontains=query)
+        return products
+
+class FilterProductAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        # Initialisation du queryset pour les produits publiés
+        queryset = Product.objects.filter(status="published")
+
+        # Récupération des paramètres de filtrage de la requête
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        materials = request.GET.getlist('materials')  # Liste des matériaux sélectionnés
+        in_stock = request.GET.get('in_stock')
+        categories = request.GET.get('categories')
+
+        # Logs pour le débogage
+        print(f"Filtrage avec - min_price: {min_price}, max_price: {max_price}, materials: {materials}, in_stock: {in_stock}, categories: {categories}")
+
+        # Appliquer les filtres
+        if min_price is not None and min_price != '':
+            queryset = queryset.filter(price__gte=min_price)
+            print(f"Produits après filtrage min_price ({min_price}): {queryset.count()}")
+
+        if max_price is not None and max_price != '':
+            queryset = queryset.filter(price__lte=max_price)
+            print(f"Produits après filtrage max_price ({max_price}): {queryset.count()}")
+
+        if materials:
+            # Si des matériaux sont spécifiés, filtrer les produits contenant ces matériaux
+            queryset = queryset.filter(material__in=materials)
+            print(f"Produits après filtrage materials ({materials}): {queryset.count()}")
+
+        if in_stock is not None and in_stock.lower() == 'true':
+            # Filtrer uniquement les produits en stock
+            queryset = queryset.filter(stock_qty__gt=0)  # Assurez-vous d'utiliser le champ correct pour le stock
+            print(f"Produits après filtrage in_stock (true): {queryset.count()}")
+
+        if categories:
+            category_titles = categories.split(',')
+            queryset = queryset.filter(category__title__in=category_titles)
+            print(f"Produits après filtrage categories ({category_titles}): {queryset.count()}")
+
+        # Sérialiser les produits filtrés
+        serializer = ProductSerializer(queryset, many=True)
+        print(f"Nombre total de produits après tous les filtres: {queryset.count()}")
+
+        # Retourner la réponse JSON
+        return Response(serializer.data)
+
+
+        
+        
+        
+    
+
+class AllMaterialsAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        # Récupérer tous les matériaux distincts des produits
+        materials = Product.objects.values_list('material', flat=True).distinct()
+        # Renvoie la liste des matériaux dans une réponse JSON
+        return Response({"materials": list(materials)})  
+
+
+class AllCategoriesAPIView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = CategorySerializer
+
+    def get(self, request, *args, **kwargs):
+        # Récupérer toutes les catégories distinctes des produits
+        categories = []
+        categories_id = Product.objects.values_list('category', flat=True).distinct()
+        for id in categories_id:
+            category = Category.objects.get(id=id)
+            categories.append(category.title)
+
+        return Response({"categories": list(categories)})              

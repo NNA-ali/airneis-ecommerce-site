@@ -1,18 +1,35 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/auth";
-import { useEffect } from "react";
-import { CartContext } from "../../plugin/Context";
+import { useAuthStore } from "../../store/auth";
+import { CartContext } from "../plugin/Context";
 
 function StoreHeader() {
+  // État d'authentification et données de l'utilisateur
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
   ]);
 
+  // Nombre d'articles dans le panier récupéré depuis le contexte
   const cartCount = useContext(CartContext);
-  console.log(cartCount);
+  console.log(cartCount); // Affichage dans la console pour vérification
 
+  // État local pour gérer la valeur du champ de recherche
+  const [search, setSearch] = useState("");
+
+  // Fonction pour mettre à jour 'search' lorsqu'il y a un changement dans le champ de recherche
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    console.log(search); // Affichage dans la console pour vérification
+  };
+
+  // Hook de navigation pour rediriger l'utilisateur vers la page de recherche avec le terme de recherche spécifié
+  const navigate = useNavigate();
+  const handleSearchSubmit = () => {
+    navigate(`/search?query=${search}`);
+  };
+
+  // Rendu du composant de l'en-tête de magasin
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -21,7 +38,7 @@ function StoreHeader() {
             <img
               src="https://airneis-ecommerce-bucket.s3.eu-north-1.amazonaws.com/static/vendor/Logo4_airneis_store-removebg-preview.png"
               alt="Airneis Logo"
-              style={{ height: "40px", width: "auto", objectFit: "contain" }}
+              style={{ height: "40px", width: "auto", objectFit: "contain",backgroundColor:"white" }}
             />
           </Link>
           <button
@@ -37,19 +54,7 @@ function StoreHeader() {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Pages
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a className="dropdown-item" href="#">About Us</a></li>
-                  <li><a className="dropdown-item" href="#">Contact Us</a></li>
-                  <li><a className="dropdown-item" href="#">Blog</a></li>
-                  <li><a className="dropdown-item" href="#">Changelog</a></li>
-                  <li><a className="dropdown-item" href="#">Terms & Condition</a></li>
-                  <li><a className="dropdown-item" href="#">Cookie Policy</a></li>
-                </ul>
-              </li> */}
+              {/* ... (autres éléments de menu) */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -92,11 +97,10 @@ function StoreHeader() {
                   </li>
                 </ul>
               </li>
-              <li className="nav-item dropdown"></li>
             </ul>
             <div className="d-flex">
               <input
-                onChange={null}
+                onChange={handleSearchChange}
                 name="search"
                 className="form-control me-2"
                 type="text"
@@ -104,12 +108,19 @@ function StoreHeader() {
                 aria-label="Search"
               />
               <button
-                onClick={null}
+                onClick={handleSearchSubmit}
                 className="btn btn-outline-success me-2"
-                type="submit"
+                type="button"
               >
                 Search
               </button>
+              <Link
+                to="/filter"
+                className="btn btn-outline-primary me-2"
+                type="button"
+              >
+                Filtrer
+              </Link>
             </div>
             {isLoggedIn() ? (
               <>

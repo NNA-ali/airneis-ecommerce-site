@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import apiInstance from "../../utils/axios";
 import GetCurrentAddress from "../plugin/UserCountry";
 import UserData from "../plugin/UserData";
 import CartID from "../plugin/cartID";
-import Swal from "sweetalert2";// Importation de la bibliothèque SweetAlert pour les alertes visuelles
-import { Carousel } from "react-bootstrap";// Importation d'un composant Carousel de React Bootstrap
+import Swal from "sweetalert2";
+import { Carousel } from "react-bootstrap";
 import { CartContext } from "../plugin/Context";
 
-import DarkModeIcon from "@mui/icons-material/DarkMode";// Importation d'une icône de thème sombre de Material-UI
-import LightModeIcon from "@mui/icons-material/LightMode";// Importation d'une icône de thème clair de Material-UI
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
-/**
- * Gère la page des produits
- * @returns {JSX.Element} Un élément bouton.
- */
-function Products() {
-
+function Search() {
+  // États pour gérer les données de recherche et d'affichage
   const [category, setCategory] = useState([]);
   const [products, setProducts] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
+  // Hook de navigation pour rediriger l'utilisateur
   const navigate = useNavigate();
 
+  // États pour gérer la sélection de couleur, taille et quantité
   const [colorValue, setColorValue] = useState("No Color");
   const [sizeValue, setSizeValue] = useState("No Size");
   const [qtyValue, setQtyValue] = useState(1);
@@ -31,36 +29,39 @@ function Products() {
   const [selectedColors, setSelectedColors] = useState({});
   const [selectedSize, setSelectedSize] = useState({});
 
+  // Contexte du panier pour accéder et mettre à jour les données du panier
   const [cartCount, setCartCount] = useContext(CartContext);
 
+  // Récupération de l'adresse courante de l'utilisateur et de ses données
   const currentAddress = GetCurrentAddress();
   const userData = UserData();
   const cart_id = CartID();
 
-  const handleCategoryClick = (categoryTitle) => {
-    navigate(`/category/${categoryTitle}`);
-  };
- // Chargement initial des produits en filtrant ceux qui sont mis en avant
-  useEffect(() => {
-    apiInstance.get(`products/`).then((response) => {
-      const featuredProducts = response.data.filter(
-        (product) => product.featured
-      );
-      setProducts(featuredProducts);
-    });
-    console.log("prod : ", products);
-  }, []);
- // Chargement initial des catégories disponibles
-  useEffect(() => {
-    apiInstance.get(`category/`).then((response) => {
-      setCategory(response.data);
-    });
-  }, []);
+  // Récupération des paramètres de recherche depuis l'URL
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query");
 
+  // État pour gérer la requête de recherche
+  const [searchQuery, setSearchQuery] = useState(query || "");
+
+  // Effet pour charger les produits correspondant à la recherche
+  useEffect(() => {
+    apiInstance.get(`search/?query=${query}`).then((response) => {
+      setProducts(response.data);
+    });
+  }, [query]);
+
+  // Effet pour mettre à jour 'searchQuery' lorsqu'il y a un changement dans 'query'
+  useEffect(() => {
+    setSearchQuery(query || "");
+  }, [query]);
+
+  // Fonction pour activer/désactiver le mode sombre
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-// Gestion du clic sur un bouton de couleur pour un produit spécifique
+
+  // Fonction pour gérer le clic sur un bouton de couleur
   const handleColorButtonClick = (event, product_id, colorName) => {
     setColorValue(colorName);
     setSelectedProduct(product_id);
@@ -69,7 +70,8 @@ function Products() {
       [product_id]: colorName,
     }));
   };
-// Gestion du clic sur un bouton de taille pour un produit spécifique
+
+  // Fonction pour gérer le clic sur un bouton de taille
   const handleSizeButtonClick = (event, product_id, size) => {
     const formattedSize = `${size.length} x ${size.width}`;
     setSizeValue(formattedSize);
@@ -79,12 +81,14 @@ function Products() {
       [product_id]: size,
     }));
   };
-// Gestion du changement de quantité pour un produit spécifique
+
+  // Fonction pour gérer le changement de quantité
   const handleQtyChange = (event, product_id) => {
     setQtyValue(event.target.value);
     setSelectedProduct(product_id);
   };
-// Ajout d'un produit au panier avec les détails spécifiés
+
+  // Fonction pour ajouter un produit au panier
   const handleAddToCart = async (product_id, price, shipping_amount) => {
     const formdata = new FormData();
     formdata.append("product_id", product_id);
@@ -99,14 +103,14 @@ function Products() {
 
     try {
       const response = await apiInstance.post(`cart-view/`, formdata);
-      // Mise à jour du nombre d'articles dans le panier après ajout
+
       const url = userData
         ? `cart-list/${cart_id}/${userData?.user_id}/`
         : `cart-list/${cart_id}/`;
       apiInstance.get(url).then((res) => {
         setCartCount(res.data.length);
       });
-      // Affichage d'une alerte de succès après ajout au panier
+
       Swal.fire({
         icon: "success",
         title: response.data.message,
@@ -115,6 +119,8 @@ function Products() {
       console.error("Erreur lors de l'ajout du produit au panier:", error);
     }
   };
+
+  // Styles CSS pour les éléments dynamiques
   const styles = {
     inStock: {
       color: "green",
@@ -135,6 +141,7 @@ function Products() {
       }
     `,
   };
+
   return (
     <div
       className={darkMode ? "dark-mode" : "light-mode"}
@@ -160,64 +167,6 @@ function Products() {
           style={{ cursor: "pointer", width: "40px", height: "40px" }}
         />
       )}
-      <Carousel style={{ paddingRight: "0px" }}>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="https://img.freepik.com/photos-premium/salon-decore-meubles-minimalistes_7023-180375.jpg?w=996"
-            style={{
-              maxWidth: "90%",
-              margin: "0 auto",
-              paddingLeft: "50px",
-              paddingRight: "50px",
-              paddingTop: "60px",
-            }}
-            alt="Image 3"
-          />
-          <Carousel.Caption>
-            <h3>Luxury Living Room Set</h3>
-            <p>Experience the epitome of comfort and elegance.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/San-Marco.jpeg"
-            style={{
-              maxWidth: "90%",
-              margin: "0 auto",
-              paddingLeft: "50px",
-              paddingRight: "50px",
-              paddingTop: "60px",
-            }}
-            alt="Image 2"
-          />
-          <Carousel.Caption>
-            <h3>Luxurious Bed Collection</h3>
-            <p>Indulge in unparalleled relaxation and style.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src={
-              "https://www.architecteinterieurs.com/mobilier-haut-de-gamme/wp-content/uploads/2019/07/chaise-turri-eclipse.jpg"
-            }
-            style={{
-              maxWidth: "90%",
-              margin: "0 auto",
-              paddingLeft: "50px",
-              paddingRight: "50px",
-              paddingTop: "60px",
-            }}
-            alt="Image 2"
-          />
-          <Carousel.Caption>
-            <h3>Elegant Dining Table Ensemble</h3>
-            <p>Elevate your dining experience with sophistication.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-      </Carousel>
 
       <div
         className="row justify-content-center mt-5 pt-3"
@@ -246,6 +195,15 @@ function Products() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Affichage du message de résultat de recherche */}
+      <div className="container text-center mt-4" 
+      
+      >
+        <h2
+        >The results for your search: "{searchQuery}"</h2>
+        
       </div>
 
       <main className="mt-5">
@@ -485,4 +443,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default Search;

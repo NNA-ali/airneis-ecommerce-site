@@ -138,13 +138,7 @@ function ProductDetail() {
   
       }
 
-    const handleAddToWishlist = () => {
-        if (userData) {
-            addToWishlist(product.id, userData?.user_id)
-            setWishlistLoading(true)
-        }
-    }
-
+    
 
     const handleReviewChange = (event) => {
         setCreateReview({

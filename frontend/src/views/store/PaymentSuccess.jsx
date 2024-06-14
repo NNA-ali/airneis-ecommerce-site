@@ -1,50 +1,51 @@
-import { useState, useEffect } from 'react'
-import apiInstance from '../../utils/axios'
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import apiInstance from "../../utils/axios";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function PaymentSuccess() {
-  const [order, setOrder] = useState([])  
-  const [status, setStatus] = useState("Verifying")
+  const [order, setOrder] = useState([]); // État pour stocker les détails de la commande
+  const [status, setStatus] = useState("Verifying"); // État pour afficher le statut du paiement
 
-  const param = useParams()
-  
-  const urlParam = new URLSearchParams(window.location.search)
-  const sessionId = urlParam.get("session_id")
+  const param = useParams(); // Récupération des paramètres d'URL, notamment 'order_oid'
 
-  console.log(param.order_oid); 
-  console.log(sessionId); 
+  // Récupération du paramètre 'session_id' depuis l'URL
+  const urlParam = new URLSearchParams(window.location.search);
+  const sessionId = urlParam.get("session_id");
 
+  console.log(param.order_oid); // Affichage dans la console pour vérification
+  console.log(sessionId); // Affichage dans la console pour vérification
 
+  // Effet pour charger les détails de la commande à partir de l'API
   useEffect(() => {
     apiInstance.get(`checkout/${param.order_oid}`).then((res) => {
-        setOrder(res.data)
-    })
-  }, [param])
-  
+      setOrder(res.data); // Met à jour l'état 'order' avec les données de la commande récupérées
+    });
+  }, [param]); // Déclenché à chaque changement dans 'param'
 
+  // Effet pour envoyer le statut du paiement à l'API
   useEffect(() => {
-    const formdata = new FormData()
-    formdata.append("order_oid", param?.order_oid)
-    formdata.append("session_id", sessionId)
+    const formdata = new FormData();
+    formdata.append("order_oid", param?.order_oid); // Ajoute 'order_oid' au formulaire
+    formdata.append("session_id", sessionId); // Ajoute 'session_id' au formulaire
 
-    
-    apiInstance.post(`payment-success/${order.oid}/`, formdata).then((res) =>{
-        if (res.data.message === "Payment Successfull"){
-            setStatus("Payment Successfull")
-        }
-        if (res.data.message === "Already Paid"){
-            setStatus("Already Paid")
-        }
-        if (res.data.message === "your Invoice is unpaid"){
-            setStatus("your Invoice is unpaid")
-        }
-        console.log(res.data);
-    })
+    // Appel à l'API pour enregistrer le statut du paiement
+    apiInstance.post(`payment-success/${order.oid}/`, formdata).then((res) => {
+      // Met à jour le statut en fonction de la réponse de l'API
+      if (res.data.message === "Payment Successfull") {
+        setStatus("Payment Successfull");
+      }
+      if (res.data.message === "Already Paid") {
+        setStatus("Already Paid");
+      }
+      if (res.data.message === "your Invoice is unpaid") {
+        setStatus("your Invoice is unpaid");
+      }
+      console.log(res.data); // Affiche la réponse de l'API dans la console
+    });
+  }, [param?.order_oid]); // Déclenché à chaque changement dans 'param?.order_oid'
 
-  }, [param?.order_oid]
-)
-
+  // Rendu du composant
 
   return (
     <main className="mb-4 mt-4 h-100">
@@ -58,7 +59,6 @@ function PaymentSuccess() {
                   <h4 className="fw-bold text-center mb-4 mt-4">
                     Checkout Successfull <i className="fas fa-check-circle" />{" "}
                   </h4>
-                  {/* <p class="para">Lorem ipsum dolor sit amet, consectetur.</p> */}
                 </div>
               </div>
             </div>
@@ -284,4 +284,4 @@ function PaymentSuccess() {
   );
 }
 
-export default PaymentSuccess
+export default PaymentSuccess;

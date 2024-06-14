@@ -1,67 +1,80 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
-import apiInstance from "../../utils/axios";
-import UserData from "../plugin/UserData";
-import Swal from "sweetalert2";
-import moment from "moment";
+import Sidebar from "./Sidebar"; // Import du composant Sidebar
+import apiInstance from "../../utils/axios"; // Import de l'instance Axios pour les requêtes API
+import UserData from "../plugin/UserData"; // Import de la fonction UserData pour récupérer les données utilisateur
+import Swal from "sweetalert2"; // Import de SweetAlert2 pour les notifications
+import moment from "moment"; // Import de Moment.js pour la gestion des dates
 
 function Settings() {
-  const [profile, setprofile] = useState({});
+  const [profile, setProfile] = useState({}); // État local pour stocker les données de profil
 
+  // Fonction pour récupérer les données de profil depuis l'API
   const fetchProfileData = () => {
     apiInstance.get(`user/profile/${UserData()?.user_id}`).then((res) => {
       console.log("RES DATA :", res.data);
-      setprofile(res.data);
+      setProfile(res.data); // Met à jour les données de profil avec la réponse de l'API
     });
   };
+
+  // Effet pour charger les données de profil au montage du composant
   useEffect(() => {
     fetchProfileData();
   }, []);
 
+  // Gestion du changement dans les champs de formulaire
   const handleInputChange = (event) => {
-    setprofile({
+    setProfile({
       ...profile,
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value, // Met à jour l'état avec les nouvelles valeurs des champs
     });
   };
+
+  // Gestion du changement de fichier image
   const handleImageChange = (event) => {
-    setprofile({
+    setProfile({
       ...profile,
-      [event.target.name]: event.target.files[0],
+      [event.target.name]: event.target.files[0], // Met à jour l'état avec le fichier image sélectionné
     });
-    console.log(profile.image);
+    console.log(profile.image); // Affiche l'image dans la console (avant la mise à jour)
   };
 
+  // Soumission du formulaire de mise à jour du profil
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Empêche le comportement par défaut du formulaire
 
-    const formdata = new FormData();
+    const formdata = new FormData(); // Crée un objet FormData pour envoyer les données au serveur
     const res = await apiInstance.get(`user/profile/${UserData()?.user_id}/`);
+
+    // Vérifie si une nouvelle image a été sélectionnée
     if (profile.image && profile.image !== res.data.image) {
-      formdata.append("image", profile.image);
+      formdata.append("image", profile.image); // Ajoute la nouvelle image à FormData si elle a changé
     }
+
+    // Ajoute les autres champs du profil à FormData
     formdata.append("full_name", profile.full_name);
     formdata.append("country", profile.country);
     formdata.append("city", profile.city);
     formdata.append("address", profile.address);
 
     try {
+      // Envoie une requête PATCH avec FormData pour mettre à jour le profil utilisateur
       await apiInstance.patch(
         `user/profile/${UserData()?.user_id}/`,
         formdata,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data", // Définit le type de contenu pour FormData
           },
         }
       );
-      window.location.reload();
+      window.location.reload(); // Recharge la page après la mise à jour
     } catch (error) {
-      console.log(error);
+      console.log(error); // Affiche les erreurs éventuelles dans la console
     }
   };
 
+  // Retourne le JSX du composant Settings
   return (
     <main className="mt-5">
       <div className="container">

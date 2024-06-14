@@ -1,0 +1,76 @@
+/* FilterPanel.css */
+
+/* Centrer et réduire la largeur du panneau de filtre */
+.filter-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh; /* Assurer que le conteneur prend toute la hauteur de l'écran */
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .filter-section .card {
+    width: 100%;
+    max-width: 1200px; /* Largeur maximale du panneau */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .filter-section .filters-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .filter-section .filter-group {
+    flex: 1;
+    min-width: 200px; /* Largeur minimale pour chaque groupe de filtres */
+    margin-right: 15px; /* Espace entre les groupes de filtres */
+  }
+  
+  .filter-section .filter-group:last-child {
+    margin-right: 0; /* Pas d'espace après le dernier groupe */
+  }
+  
+  .filter-section .form-control {
+    margin-bottom: 10px;
+    padding: 5px 10px; /* Réduction du padding pour rendre les champs plus compacts */
+  }
+  
+  .filter-section .form-check-label {
+    margin-left: 5px;
+    font-size: 14px; /* Réduction de la taille de la police */
+  }
+  
+  .filter-section .btn {
+    margin-top: 10px;
+    padding: 5px 15px; /* Réduction du padding des boutons */
+  }
+  
+  .filter-section .btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  .filter-section .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+  }
+  
+  /* Ajout de style pour le mode sombre */
+  .dark-mode .filter-section .card {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .dark-mode .filter-section .btn-primary {
+    background-color: #1e90ff;
+  }
+  
+  .dark-mode .filter-section .btn-secondary {
+    background-color: #5a6268;
+  }
+  

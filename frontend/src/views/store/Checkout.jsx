@@ -5,68 +5,70 @@ import Swal from "sweetalert2";
 import { SERVER_URL } from "../../utils/constants";
 
 function Checkout() {
-  const [order, setOrder] = useState([]);
-  const [couponCode, setCouponCode] = useState("");
-  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [order, setOrder] = useState([]); // État pour stocker les données de la commande
+  const [couponCode, setCouponCode] = useState(""); // État pour le code de coupon
+  const [paymentLoading, setPaymentLoading] = useState(false); // État pour le chargement du paiement
 
-  const param = useParams();
-  const navigate = useNavigate()
+  const param = useParams(); // Récupère les paramètres d'URL
+  const navigate = useNavigate(); // Hook de navigation
 
+  // Fonction pour récupérer les données de la commande depuis l'API
   const fetchOrderData = () => {
     apiInstance.get(`checkout/${param?.order_oid}/`).then((res) => {
       setOrder(res.data);
     });
   };
 
+  // Effet pour charger les données de la commande au montage du composant
   useEffect(() => {
     fetchOrderData();
   }, []);
 
+  // Fonction pour appliquer un coupon à la commande
   const applyCoupon = async () => {
-    console.log(couponCode);
-    console.log(param.order_oid);
+    console.log(couponCode); // Affiche le code de coupon dans la console
+    console.log(param.order_oid); // Affiche l'ID de commande dans la console
 
     const formdata = new FormData();
-    formdata.append("order_oid", order.oid);
-    formdata.append("coupon_code,", couponCode);
+    formdata.append("order_oid", order.oid); // Ajoute l'ID de commande au formulaire
+    formdata.append("coupon_code,", couponCode); // Ajoute le code de coupon au formulaire
 
     try {
-      const response = await apiInstance.post("coupon/", formdata);
-      fetchOrderData();
-      console.log(response.data.message);
+      const response = await apiInstance.post("coupon/", formdata); // Envoie la demande d'application du coupon
+      fetchOrderData(); // Met à jour les données de la commande après l'application du coupon
+      console.log(response.data.message); // Affiche le message de réponse dans la console
+      // Affiche une alerte à l'utilisateur avec l'icône et le message de réponse
       Swal.fire({
         icon: response.data.icon,
         title: response.data.message,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error); // Affiche les erreurs éventuelles dans la console
     }
   };
 
+  // Fonction pour initier le paiement avec Stripe
   const payWithStripe = (event) => {
     event.preventDefault();
-    setPaymentLoading(true);
+    setPaymentLoading(true); // Active le chargement du paiement
+
+    // Soumet le formulaire de paiement s'il est disponible dans la référence actuelle
     if (formRef.current) {
       formRef.current.submit();
     }
   };
 
+  // Effet pour soumettre automatiquement le formulaire de paiement lorsque 'paymentLoading' change
   useEffect(() => {
     if (paymentLoading && formRef.current) {
-        formRef.current.submit();
+      formRef.current.submit();
     }
-}, [paymentLoading]);
+  }, [paymentLoading]);
 
-
+  // Référence pour le formulaire de paiement
   const formRef = useRef(null);
 
-  // useEffect(() => {
-  //   const form = document.getElementById('checkout-form-id');
-  //   if (form) {
-  //     form.submit();
-  //   }
-  // }, [paymentLoading]);
-
+  // Rendu du composant Checkout
   return (
     <main className="mb-4 mt-4">
       <div className="container">
@@ -246,11 +248,14 @@ function Checkout() {
                 </div>
 
                 {console.log("ORDER OID : ", order?.oid)}
-                {console.log("URL CHECKOUT : ", `${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`)}
+                {console.log(
+                  "URL CHECKOUT : ",
+                  `${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`
+                )}
 
-                {paymentLoading === true && 
+                {paymentLoading === true && (
                   <form
-                  ref={formRef}
+                    ref={formRef}
                     action={`${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`}
                     method="POST"
                   >
@@ -263,11 +268,11 @@ function Checkout() {
                       Processing... <i className="fas fa-spinner fa-spin"></i>
                     </button>
                   </form>
-                }
+                )}
 
-                {paymentLoading === false && 
+                {paymentLoading === false && (
                   <form
-                  ref={formRef}
+                    ref={formRef}
                     action={`${SERVER_URL}/api/v1/stripe-checkout/${order?.oid}/`}
                     method="POST"
                   >
@@ -279,7 +284,7 @@ function Checkout() {
                       Pay With Stripe <i className="fas fa-credit-card"></i>
                     </button>
                   </form>
-                }
+                )}
               </section>
             </div>
           </div>

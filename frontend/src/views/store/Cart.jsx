@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../plugin/Context";
 
+// Configuration du toast de notification avec SweetAlert2
 const Toast = Swal.mixin({
   toast: true,
   position: "top",
@@ -18,25 +19,27 @@ const Toast = Swal.mixin({
 });
 
 function Cart() {
-  const [cart, setCart] = useState([]);
-  const [cartTotal, setCartTotal] = useState([]);
-  const [productQuantities, setProductQuantities] = useState("");
+  const [cart, setCart] = useState([]); // État pour stocker les éléments du panier
+  const [cartTotal, setCartTotal] = useState([]); // État pour stocker le total du panier
+  const [productQuantities, setProductQuantities] = useState(""); // État pour les quantités de produits
 
+  // États pour les informations du formulaire de commande
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
 
-  const [cartCount, setCartCount] = useContext(CartContext);
+  const [cartCount, setCartCount] = useContext(CartContext); // Contexte du nombre d'articles dans le panier
 
-  const userData = UserData();
-  const cart_id = CartID();
-  const currentAddress = GetCurrentAddress();
-  const navigate = useNavigate();
+  const userData = UserData(); // Données utilisateur récupérées depuis le plugin
+  const cart_id = CartID(); // Identifiant du panier récupéré depuis le plugin
+  const currentAddress = GetCurrentAddress(); // Adresse actuelle récupérée depuis le plugin
+  const navigate = useNavigate(); // Hook de navigation
+
+  // Fonction pour récupérer les données du panier depuis l'API
   const fetchCartData = (cartId, userId) => {
     const url = userId
       ? `cart-list/${cartId}/${userId}/`
@@ -46,33 +49,34 @@ function Cart() {
       setCartCount(res.data.length);
     });
   };
+
+  // Fonction pour récupérer le total du panier depuis l'API
   const fetchCartTotal = (cartId, userId) => {
     const url = userId
       ? `cart-detail/${cartId}/${userId}/`
       : `cart-detail/${cartId}/`;
     apiInstance.get(url).then((res) => {
       setCartTotal(res.data);
-      console.log("", res.data);
+      console.log("", res.data); // Affiche les données du total du panier dans la console
     });
   };
 
+  // Effets pour charger les données du panier et le total du panier au montage du composant
   if (cart_id !== null || cart_id !== undefined) {
     if (userData !== undefined) {
-      // send Cart Data with userId and cart id
       useEffect(() => {
         fetchCartData(cart_id, userData?.user_id);
         fetchCartTotal(cart_id, userData?.user_id);
       }, []);
     } else {
-      // send cart sata without userid but only cart id
       useEffect(() => {
         fetchCartData(cart_id, null);
         fetchCartTotal(cart_id, null);
       }, []);
     }
-    // console.log(cartTotal);
   }
 
+  // Effet pour initialiser les quantités de produits lorsque le contenu du panier change
   useEffect(() => {
     const initialQuantities = {};
     cart.forEach((c) => {
@@ -81,6 +85,7 @@ function Cart() {
     setProductQuantities(initialQuantities);
   }, [cart]);
 
+  // Fonction pour gérer le changement de quantité d'un produit dans le panier
   const handleQtyChange = (event, product_id) => {
     const quantity = event.target.value;
 
@@ -90,6 +95,7 @@ function Cart() {
     }));
   };
 
+  // Fonction pour mettre à jour un article dans le panier
   const updateCart = async (
     product_id,
     price,
@@ -97,7 +103,7 @@ function Cart() {
     color,
     size
   ) => {
-    const qtyValue = productQuantities[product_id];
+    const qtyValue = productQuantities[product_id]; // Quantité du produit à mettre à jour
 
     const formdata = new FormData();
     formdata.append("product_id", product_id);
@@ -110,37 +116,46 @@ function Cart() {
     formdata.append("size", size);
     formdata.append("cart_id", cart_id);
 
+    // Envoie la demande de mise à jour du panier à l'API
     const response = await apiInstance.post("cart-view/", formdata);
-    console.log(response.data);
+    console.log(response.data); // Affiche les données de la réponse dans la console
 
+    // Met à jour les données du panier après la modification
     fetchCartData(cart_id, userData?.user_id);
     fetchCartTotal(cart_id, userData?.user_id);
 
+    // Affiche une notification de succès à l'utilisateur
     Swal.fire({
       icon: "success",
       title: response.data.message,
     });
   };
 
+  // Fonction pour supprimer un article du panier
   const handleDeleteCartItem = async (itemId) => {
-    console.log("ITEMID :", cart_id)
+    console.log("ITEMID :", cart_id); // Affiche l'ID du panier dans la console
+
     const url = userData?.user_id
       ? `cart-delete/${cart_id}/${itemId}/${userData?.user_id}/`
       : `cart-delete/${cart_id}/${itemId}/`;
 
     try {
-      await apiInstance.delete(url);
+      await apiInstance.delete(url); // Envoie la demande de suppression à l'API
+      // Met à jour les données du panier après la suppression
       fetchCartData(cart_id, userData?.user_id);
       fetchCartTotal(cart_id, userData?.user_id);
+
+      // Affiche une notification de succès à l'utilisateur
       Toast.fire({
         icon: "success",
         title: "Item Removed From Cart",
       });
     } catch (error) {
-      console.log(error);
+      console.log(error); // Affiche les erreurs éventuelles dans la console
     }
   };
 
+  // Fonction pour gérer les changements dans les champs du formulaire de commande
   const handleChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
@@ -176,8 +191,12 @@ function Cart() {
         break;
     }
   };
+
+  // Fonction pour créer une commande à partir des informations du formulaire
   const createOrder = async () => {
+    // Vérifie si tous les champs requis sont remplis
     if (!fullName || !email || !mobile || !address || !city || !country) {
+      // Affiche une alerte si des champs sont manquants
       Swal.fire({
         icon: "warning",
         title: "Missing Fields!",
@@ -185,6 +204,7 @@ function Cart() {
       });
     } else {
       try {
+        // Prépare les données du formulaire pour créer une nouvelle commande
         const formdata = new FormData();
         formdata.append("full_name", fullName);
         formdata.append("email", email);
@@ -196,15 +216,18 @@ function Cart() {
         formdata.append("cart_id", cart_id);
         formdata.append("user_id", userData ? userData.user_id : 0);
 
+        // Envoie la demande de création de commande à l'API
         const response = await apiInstance.post("create-order/", formdata);
 
+        // Redirige l'utilisateur vers la page de paiement ou de confirmation de commande
         navigate(`/checkout/${response.data.order_oid}/`);
       } catch (error) {
-        console.log(error);
+        console.log(error); // Affiche les erreurs éventuelles dans la console
       }
     }
   };
 
+  // Rendu du composant Cart
   return (
     <div>
       <main className="mt-5">

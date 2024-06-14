@@ -7,7 +7,7 @@ import Logout from './views/auth/Logout'
 import ForgotPassword from './views/auth/ForgotPassword'
 import CreatePassword from './views/auth/CreatePassword'
 import StoreFooter from './views/auth/Base/StoreFooter'
-import StoreHeader from './views/auth/Base/StoreHeader'
+import StoreHeader from './views/store/StoreHeader.jsx'
 import MainWrapper from './layout/MainWrapper'
 import Products from './views/store/Products'
 import ProductDetail from './views/store/ProductDetail'
@@ -28,6 +28,8 @@ import CustomerNotification from './views/customer/CustomerNotification.jsx'
 import CustomerSettings from './views/customer/Settings.jsx'
 import Policy from './views/auth/Base/Policy.jsx'
 import Invoice from './views/customer/Invoice.jsx'
+import Search from './views/store/Search.jsx'
+import FilterPanel from './views/store/FilterPanel'; 
 
 
 function App() {
@@ -60,10 +62,12 @@ function App() {
           {/* Store components  */}
           <Route path='/' element={<Products />} />
           <Route path='/detail/:slug/' element={<ProductDetail/>} />
-          <Route path='/cart/' element={<Cart/>} />
+          <Route path='/cart/' element={<PrivateRoutes> <Cart /></PrivateRoutes> } />
           <Route path='/checkout/:order_oid/' element={<Checkout />} />
           <Route path='/payment-success/:order_oid/' element={<PaymentSuccess />} />
           <Route path='/policy/' element={<Policy/>} />
+          <Route path='/search/' element={<Search/>} />
+          <Route path='/filter/' element={<FilterPanel />} /> 
 
           {/* Category Routes */}
           <Route path='/category/Bed' element={<Category  title="Bed"/>} />
@@ -75,7 +79,7 @@ function App() {
          
           
           {/* Customer Routes */}
-          <Route path='/customer/contact/' element={<PrivateRoutes> <Contact /></PrivateRoutes> } />
+          <Route path='/customer/contact/' element={ <Contact /> } />
           <Route path='/customer/account/' element={<PrivateRoutes> <Account /></PrivateRoutes> } />
           <Route path='/customer/orders/' element={<PrivateRoutes> <Orders /></PrivateRoutes> } />
           <Route path='/customer/notifications/' element={<PrivateRoutes> <CustomerNotification /></PrivateRoutes> } />

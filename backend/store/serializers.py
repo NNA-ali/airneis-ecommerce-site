@@ -1,59 +1,52 @@
-from rest_framework import serializers
-from .models import CarouselImage
+from rest_framework import serializers  # Importation de la classe serializers de Django REST framework
+from .models import CarouselImage  # Importation du modèle CarouselImage
 
-
-
-
-
-
+# Importation des modèles de l'application store
 from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon, Contact
+
+# Importation du modèle Vendor de l'application vendor
 from vendor.models import Vendor
+
+# Sérialiseur pour le modèle Category
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Category
-        fields = "__all__"
+        model = Category  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-
-
-
+# Sérialiseur pour le modèle Gallery
 class GallerySerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Gallery
-        fields = "__all__"
+        model = Gallery  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-
+# Sérialiseur pour le modèle Specification
 class SpecificationSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Specification
-        fields = "__all__"
+        model = Specification  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-
+# Sérialiseur pour le modèle Size
 class SizeSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Size
-        fields = "__all__"
+        model = Size  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-
+# Sérialiseur pour le modèle Color
 class ColorSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Color
-        fields = "__all__"
+        model = Color  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-
+# Sérialiseur pour le modèle Product
 class ProductSerializer(serializers.ModelSerializer):
-    gallery = GallerySerializer(many=True, read_only=True) 
-    color = ColorSerializer(many=True, read_only=True)       
-    specification = SpecificationSerializer(many=True, read_only=True)       
-    size = SizeSerializer(many=True, read_only=True)  
+    # Sérialisation des relations Many-to-Many et ForeignKey
+    gallery = GallerySerializer(many=True, read_only=True)  # Sérialiseur imbriqué pour les images de la galerie
+    color = ColorSerializer(many=True, read_only=True)  # Sérialiseur imbriqué pour les couleurs
+    specification = SpecificationSerializer(many=True, read_only=True)  # Sérialiseur imbriqué pour les spécifications
+    size = SizeSerializer(many=True, read_only=True)  # Sérialiseur imbriqué pour les tailles
     
-
     class Meta:
-        model = Product
+        model = Product  # Spécifie le modèle à sérialiser
         fields = [
             'id',
             'title',
@@ -79,178 +72,172 @@ class ProductSerializer(serializers.ModelSerializer):
             'pid',
             'slug',
             'date',
-
-        ]    
+        ]  # Liste des champs à sérialiser
 
     def __init__(self, *args, **kwargs):
-        super(ProductSerializer,self).__init__(*args, **kwargs)   
+        super(ProductSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3    
-           
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
-
+# Sérialiseur pour le modèle Cart
 class CartSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Cart
-        fields = "__all__"
-
+        model = Cart  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(CartSerializer,self).__init__(*args, **kwargs)   
+        super(CartSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3    
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
-
-
-    
-   
-
+# Sérialiseur pour le modèle CartOrderItem
 class CartOrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartOrderItem  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
+
+    def __init__(self, *args, **kwargs):
+        super(CartOrderItemSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
+
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
+
+# Sérialiseur pour le modèle CartOrder
+class CartOrderSerializer(serializers.ModelSerializer):
+    orderitem = CartOrderItemSerializer(many=True, read_only=True)  # Sérialiseur imbriqué pour les items de commande
     
     class Meta:
-        model = CartOrderItem
-        fields = "__all__"
-
-
-    def __init__(self, *args, **kwargs):
-        super(CartOrderItemSerializer,self).__init__(*args, **kwargs)   
-
-        request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3 
-
-
-class CartOrderSerializer(serializers.ModelSerializer):
-    orderitem = CartOrderItemSerializer(many=True, read_only=True)
-    class Meta:
-        model = CartOrder
-        fields = "__all__"
-
+        model = CartOrder  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(CartOrderSerializer,self).__init__(*args, **kwargs)   
+        super(CartOrderSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post": 
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3    
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle ProductFaq
 class ProductFaqSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = ProductFaq
-        fields = "__all__"
-
+        model = ProductFaq  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(ProductFaqSerializer,self).__init__(*args, **kwargs)   
+        super(ProductFaqSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3  
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle Vendor
 class VendorSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Vendor
-        fields = "__all__"
-
+        model = Vendor  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(VendorSerializer,self).__init__(*args, **kwargs)   
+        super(VendorSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3  
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle Review
 class ReviewSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Review
-        fields = "__all__"
-
+        model = Review  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(ReviewSerializer,self).__init__(*args, **kwargs)   
+        super(ReviewSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3              
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle Wishlist
 class WishlistSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Wishlist
-        fields = "__all__"
-
+        model = Wishlist  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(WishlistSerializer,self).__init__(*args, **kwargs)   
+        super(WishlistSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3              
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle Coupon
 class CouponSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Coupon
-        fields = "__all__"
-
+        model = Coupon  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(CouponSerializer,self).__init__(*args, **kwargs)   
+        super(CouponSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3                          
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
-
+# Sérialiseur pour le modèle Notification
 class NotificationSerializer(serializers.ModelSerializer):
-
     class Meta:
-        model = Notification
-        fields = "__all__"
-
+        model = Notification  # Spécifie le modèle à sérialiser
+        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
     def __init__(self, *args, **kwargs):
-        super(NotificationSerializer,self).__init__(*args, **kwargs)   
+        super(NotificationSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
+        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
         request = self.context.get("request")
-        if request and request.method == "post":
-            self.Meta.depth = 0
-        else: 
-            self.Meta.depth = 3 
+        if request and request.method == "POST":
+            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
+        else:
+            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
+# Sérialiseur pour le modèle CarouselImage
 class CarouselImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CarouselImage
-        fields = ['id', 'title', 'image']
+        model = CarouselImage  # Spécifie le modèle à sérialiser
+        fields = ['id', 'title', 'image']  # Sérielisation des champs spécifiés
 
+# Sérialiseur personnalisé pour le modèle Contact
 class ContactSerializer(serializers.Serializer):
-    
-    user = serializers.EmailField(required=True)
-    message = serializers.CharField(required=True, max_length=2000)
-    full_name = serializers.CharField(required=True)
+    user = serializers.EmailField(required=True)  # Champ email obligatoire
+    message = serializers.CharField(required=True, max_length=2000)  # Champ de texte pour le message, obligatoire et avec une longueur maximale
+    full_name = serializers.CharField(required=True)  # Champ texte pour le nom complet, obligatoire

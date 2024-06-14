@@ -12,6 +12,8 @@ from customer import views as customer_views
 
 
 
+
+
 urlpatterns = [
     path('user/token/', userauths_views.MyTokenObtainPairView.as_view()),
     path('user/token/refresh/',TokenRefreshView.as_view()),
@@ -34,6 +36,11 @@ urlpatterns = [
     path('create-order/', store_views.CreateOrderAPIView.as_view()),
     path('checkout/<order_oid>/', store_views.CheckoutView.as_view()),
     path('coupon/',store_views.CouponAPIView.as_view()),
+    path('search/',store_views.SearchProductAPIView.as_view()),
+    path('filter-products/', store_views.FilterProductAPIView.as_view(), ),
+    path('all-materials/', store_views.AllMaterialsAPIView.as_view()),
+    path('all-categories/', store_views.AllCategoriesAPIView.as_view()),
+
     # path('policy/',store_views.PolicyAPIView.as_view()),
     # payment Endpoints
     path('stripe-checkout/<order_oid>/',store_views.StripeCheckoutView.as_view()),
