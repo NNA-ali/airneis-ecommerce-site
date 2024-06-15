@@ -107,3 +107,25 @@ npm run dev
 
 Vous pouvez ouvrir votre navigateur et accéder à l'application via l'URL fournie pour explorer les fonctionnalités.
 pour lancer le back-office : [Cliquer ici](https://airneis-ecommerce-api.up.railway.app/admin/)
+## Configuration des Variables d'Environnement
+## Configuration des Variables d'Environnement
+
+Avant de démarrer l'application, vous devez configurer les variables d'environnement en créant un fichier `.env` dans le répertoire `backend`. Suivez les étapes ci-dessous :
+
+1. **Créer un fichier `.env` dans le répertoire `backend` :**
+   - Dans le répertoire `backend`, créez un fichier nommé `.env`.
+
+2. **Ajouter les variables d'environnement suivantes dans le fichier `.env` :**
+   ```bash
+   STRIPE_PUBLIC_KEY=pk_test_51PCeRQH1sta5VsnZ8ugCyuyAzwSaz5RIOAUi9R6kyif22gu2IudnTeVhCpitJsHXDEXMcKn2FdRo6PkN2yR881MD00R9NtcCAC
+   STRIPE_SECRET_KEY=sk_test_51PCeRQH1sta5VsnZNRXTbW9jrDoPSMX4ufLQ9HdlNXnjnxZin1S9C9a85JDrDefgmblFRm1uuqOfRshEbv5GJqr500Oymcrr4V
+   MAILGUN_API_KEY=9ee954fa9a4b0e52a0f4e2de120741fb-ed54d65c-86e0f37e
+   MAILGUN_SENDER_DOMAIN=sandbox164508701d4c4c3c8097db318e748c2a.mailgun.org
+   FROM_EMAIL=abdelaaliiqbal@gmail.com
+   EMAIL_BACKEND=anymail.backends.mailersend.EmailBackend
+   DEFAULT_FROM_EMAIL=abdelaaliiqbal@gmail.com
+   SERVER_EMAIL=abdelaaliiqbal@gmail.com
+   AWS_ACCESS_KEY_ID=AKIAZI2LH5JWPZ5I5O6J
+   AWS_SECRET_ACCESS_KEY=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
+   AWS_STORAGE_BUCKET_NAME=airneis-ecommerce-bucket
+   DATABASE_URL=postgresql://postgres:BUUyPcfAehrixSuJaxWwrXgXZWHHhobq@roundhouse.proxy.rlwy.net:18059/railway

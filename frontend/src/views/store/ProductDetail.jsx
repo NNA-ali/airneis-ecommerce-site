@@ -9,7 +9,7 @@ import UserData from '../plugin/UserData';
 import CartID from '../plugin/cartID';
 import { addToCart } from '../plugin/AddToCart';
 
-import { addToWishlist } from '../plugin/addToWishlist';
+
 import { CartContext } from '../plugin/Context';
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -43,8 +43,7 @@ function ProductDetail() {
 
     let [isAddingToCart, setIsAddingToCart] = useState("Add To Cart");
     let [loading, setLoading] = useState(true);
-    let [wishlistLoading, setWishlistLoading] = useState(false);
-    let [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+   
 
     const [createReview, setCreateReview] = useState({ user_id: 0, product_id: product?.id, review: "", rating: 0, })
     const [reviews, setReviews] = useState([]);

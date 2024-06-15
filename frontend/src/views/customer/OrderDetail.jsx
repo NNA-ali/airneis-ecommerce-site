@@ -217,7 +217,7 @@ function OrderDetail() {
         </div>
       </div>
     </section>
-    {/*Section: Wishlist*/}
+   
   </div>
 </main>
   )

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from userauths.models import User
-from store.models import Category, Contact,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon , Contact
+from store.models import Category, Contact,Tax, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review,  Notification, Coupon , Contact
 from store.serializers import ContactSerializer, ProductSerializer, CategorySerializer, CartSerializer, CartOrderSerializer, CartOrderItemSerializer, CouponSerializer, NotificationSerializer,ContactSerializer
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal

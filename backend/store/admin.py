@@ -1,7 +1,7 @@
 from django.contrib import admin  # Importation du module admin de Django
 
 # Importation des modèles à enregistrer dans l'interface d'administration
-from store.models import Product, Tax, Category, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon, Wishlist, Contact
+from store.models import Product, Tax, Category, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, Notification, ProductFaq, Review, Coupon,  Contact
 
 # Définition d'une classe Inline pour gérer les images d'un produit dans l'admin
 class GalleryInline(admin.TabularInline):
@@ -94,7 +94,7 @@ admin.site.register(CartOrder, CartOrderAdmin)  # Enregistrement du modèle Cart
 admin.site.register(CartOrderItem)  # Enregistrement du modèle CartOrderItem
 admin.site.register(ProductFaq, ProductFaqAdmin)  # Enregistrement du modèle ProductFaq avec la configuration personnalisée ProductFaqAdmin
 admin.site.register(Coupon, CouponAdmin)  # Enregistrement du modèle Coupon avec la configuration personnalisée CouponAdmin
-admin.site.register(Wishlist)  # Enregistrement du modèle Wishlist
+
 admin.site.register(Notification, NotificationAdmin)  # Enregistrement du modèle Notification avec la configuration personnalisée NotificationAdmin
 admin.site.register(Review, ProductReviewAdmin)  # Enregistrement du modèle Review avec la configuration personnalisée ProductReviewAdmin
 admin.site.register(Tax)  # Enregistrement du modèle Tax

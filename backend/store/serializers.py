@@ -2,7 +2,7 @@ from rest_framework import serializers  # Importation de la classe serializers d
 from .models import CarouselImage  # Importation du modèle CarouselImage
 
 # Importation des modèles de l'application store
-from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Wishlist, Notification, Coupon, Contact
+from store.models import Category, Product, Gallery, Specification, Size, Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, Notification, Coupon, Contact
 
 # Importation du modèle Vendor de l'application vendor
 from vendor.models import Vendor
@@ -182,21 +182,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         else:
             self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
 
-# Sérialiseur pour le modèle Wishlist
-class WishlistSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wishlist  # Spécifie le modèle à sérialiser
-        fields = "__all__"  # Sérielisation de tous les champs du modèle
 
-    def __init__(self, *args, **kwargs):
-        super(WishlistSerializer, self).__init__(*args, **kwargs)  # Appel au constructeur parent
 
-        # Personnalisation de la profondeur de sérialisation en fonction de la méthode de requête
-        request = self.context.get("request")
-        if request and request.method == "POST":
-            self.Meta.depth = 0  # Sérialisation peu profonde pour les requêtes POST
-        else:
-            self.Meta.depth = 3  # Sérialisation plus profonde pour les autres requêtes
+    
 
 # Sérialiseur pour le modèle Coupon
 class CouponSerializer(serializers.ModelSerializer):

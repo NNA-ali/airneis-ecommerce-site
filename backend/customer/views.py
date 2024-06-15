@@ -6,7 +6,7 @@ from userauths.models import User  # Import du modèle utilisateur
 from store.models import (  # Import des modèles du store
     Category, Contact, Tax, Product, Gallery, Specification, Size, 
     Color, Cart, CartOrder, CartOrderItem, ProductFaq, Review, 
-    Wishlist, Notification, Coupon
+    Notification, Coupon
 )
 from store.serializers import (  # Import des serializers du store
     ProductSerializer, CategorySerializer, CartSerializer, 
