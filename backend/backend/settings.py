@@ -34,8 +34,8 @@ SECRET_KEY = 'django-insecure-krt5eialf^p28@y@i!qe7%21=s#ct$l38he019k23m1kdw&2tr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["airneis-ecommerce-api.up.railway.app", "127.0.O.1"]
-CSRF_TRUSTED_ORIGINS=['https://airneis-ecommerce-api.up.railway.app' ,'https://127.0.O.1']
+ALLOWED_HOSTS = ["airneis-ecommerce-api.up.railway.app", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS=['https://airneis-ecommerce-api.up.railway.app' ,'http://127.0.0.1']
 SECURE_CROSS_ORIGIN_OPENER_POLICY="same-origin-allow-popups"
 
 

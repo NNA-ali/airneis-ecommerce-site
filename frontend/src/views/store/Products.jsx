@@ -444,12 +444,7 @@ function Products() {
                             >
                               <i className="fas fa-shopping-cart" />
                             </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger px-3 me-1 mb-1 ms-2"
-                            >
-                              <i className="fas fa-heart" />
-                            </button>
+                            
                           </div>
                         </ul>
 

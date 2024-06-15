@@ -143,13 +143,10 @@ function PaymentSuccess() {
                               >
                                 View Order <i className="fas fa-eye" />{" "}
                               </button>
-                              <a href="/" className="btn btn-primary mt-3 ms-2">
-                                Download Invoice{" "}
-                                <i className="fas fa-file-invoice" />{" "}
-                              </a>
+                              
                               <a className="btn btn-secondary mt-3 ms-2">
                                 <Link to="/" style={{ color: "white" }}>
-                                  {" "}
+                                  {""}
                                   Go Home <i className="fas fa-arrow-left" />
                                 </Link>
                               </a>
@@ -184,10 +181,7 @@ function PaymentSuccess() {
                               >
                                 View Order <i className="fas fa-eye" />{" "}
                               </button>
-                              <a href="/" className="btn btn-primary mt-3 ms-2">
-                                Download Invoice{" "}
-                                <i className="fas fa-file-invoice" />{" "}
-                              </a>
+                              
                               <a className="btn btn-secondary mt-3 ms-2">
                                 <Link to="/" style={{ color: "white" }}>
                                   {" "}

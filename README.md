@@ -107,7 +107,15 @@ npm run dev
 - __Frontend__ : L'application frontend devrait être accessible sur http://localhost:3000/.
 
 Vous pouvez ouvrir votre navigateur et accéder à l'application via l'URL fournie pour explorer les fonctionnalités.
-pour lancer le back-office : [Cliquer ici](https://airneis-ecommerce-api.up.railway.app/admin/)
+pour lancer le back-office : [Cliquer ici](http://127.0.0.1:8000/admin/)
+
+pour creer un superuser pour le back-office :
+
+Copier le code
+```bash
+python manage.py createsuperuser 
+```
+suivi d'un e-mail et mot de passe
 ## Configuration des Variables d'Environnement
 ## Configuration des Variables d'Environnement
 
