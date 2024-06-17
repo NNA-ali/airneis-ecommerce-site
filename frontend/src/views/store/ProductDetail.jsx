@@ -313,7 +313,7 @@ function ProductDetail() {
                                         </div>
                                         <h5 style={darkMode ? {color : '#fff'} : {color : "#1e1e1e"}} className="mb-3">
                                             <s  className="text-muted me-2 small align-middle">{addon?.currency_sign}{product.old_price}</s>
-                                            <span className="align-middle">{addon?.currency_sign}{product?.price}</span> <span className='align-middle text-muted' style={{ fontSize: "13px", fontStyle: "italic" }}>({product.get_precentage}% OFF)</span>
+                                            <span className="align-middle">{addon?.currency_sign}{product?.price}£</span> <span className='align-middle text-muted' style={{ fontSize: "13px", fontStyle: "italic" }}>({product.get_precentage}% OFF)</span>
                                         </h5>
                                         <p className="text-muted">
                                             {product.description?.slice(0, 300)}...

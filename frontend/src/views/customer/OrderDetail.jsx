@@ -51,7 +51,7 @@ function OrderDetail() {
                           <div className="">
                             <p className="mb-1">Total</p>
                             <h2 className="mb-0">
-                              ${order.total}
+                              £{order.total}
                               <span
                                 className=""
                                 style={{ fontSize: "0.875rem" }}
@@ -114,7 +114,7 @@ function OrderDetail() {
                           <div className="">
                             <p className="mb-1">Shipping Amount</p>
                             <h2 className="mb-0">
-                              ${order.shipping_amount}
+                              £{order.shipping_amount}
                               <span
                                 className=""
                                 style={{ fontSize: "0.875rem" }}
@@ -135,7 +135,7 @@ function OrderDetail() {
                           <div className="">
                             <p className="mb-1">Tax Fee</p>
                             <h2 className="mb-0">
-                              ${order.tax_fee}
+                              £{order.tax_fee}
                               <span
                                 className=""
                                 style={{ fontSize: "0.875rem" }}
@@ -195,13 +195,13 @@ function OrderDetail() {
                             </div>
                           </td>
                           <td>
-                            <p className="fw-normal mb-1">${o.price}</p>
+                            <p className="fw-normal mb-1">£{o.price}</p>
                           </td>
                           <td>
                             <p className="fw-normal mb-1">{o.qty}</p>
                           </td>
                           <td>
-                            <span className="fw-normal mb-1">${o.sub_total}</span>
+                            <span className="fw-normal mb-1">£{o.sub_total}</span>
                           </td>
                         </tr>
 

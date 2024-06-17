@@ -316,9 +316,9 @@ function Products() {
                         <div>{product.category.title}</div>
                       </a>
                       <div className="d-flex justify-content-center">
-                        <h6 className="mb-3">{product.price}€ </h6>
+                        <h6 className="mb-3">{product.price}£ </h6>
                         <h6 className="mb-3 text-muted ms-2">
-                          <strike> {product.old_price} € </strike>{" "}
+                          <strike> {product.old_price} £ </strike>{" "}
                         </h6>
                       </div>
                       <br />

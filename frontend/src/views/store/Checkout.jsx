@@ -204,28 +204,28 @@ function Checkout() {
                 <h5 className="mb-3">Order Summary</h5>
                 <div className="d-flex justify-content-between mb-3">
                   <span>Sub total </span>
-                  <span>${order.sub_total}</span>
+                  <span>£{order.sub_total}</span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span>Shipping </span>
-                  <span>${order.shipping_amount}</span>
+                  <span>£{order.shipping_amount}</span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span>Tax </span>
-                  <span>${order.tax_fee}</span>
+                  <span>£{order.tax_fee}</span>
                 </div>
 
                 {order.saved !== "0.00" && (
                   <div className="d-flex text-danger justify-content-between mb-3">
                     <span>Discount </span>
-                    <span>-${order.saved}</span>
+                    <span>-£{order.saved}</span>
                   </div>
                 )}
 
                 <hr className="my-4" />
                 <div className="d-flex justify-content-between fw-bold mb-5">
                   <span>Total </span>
-                  <span>${order.total}</span>
+                  <span>£{order.total}</span>
                 </div>
                 <div className="shadow rounded-4 card p-4 mb-4 rounded-5">
                   <h5 className="mb-4"> Apply Promo Code </h5>

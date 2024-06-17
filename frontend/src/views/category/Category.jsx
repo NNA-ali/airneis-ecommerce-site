@@ -120,7 +120,7 @@ function Category(title) {
                   />
                   <div className="card-body" style={darkMode ? { color: "#fff" } : { color: "#1e1e1e" }}>
                     <h5 className="card-title" style={darkMode ? { color: "#fff" } : { color: "#1e1e1e" }}>{product.title}</h5>
-                    <p className="card-text">{product.price}€</p>
+                    <p className="card-text">{product.price}£</p>
                     <Link
                       to={`/detail/${product.slug}/`}
                       className="btn btn-primary"

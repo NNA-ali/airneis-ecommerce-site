@@ -248,25 +248,25 @@ function PaymentSuccess() {
                 />
                 <div className="d-flex justify-content-between">
                   <p className="fw-bold mb-0">Sub total</p>
-                  <p className="text-muted mb-0">${order.sub_total}</p>
+                  <p className="text-muted mb-0">£{order.sub_total}</p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p className="small mb-0">Shipping Fee</p>
-                  <p className="small mb-0">${order.shipping_amount}</p>
+                  <p className="small mb-0">£{order.shipping_amount}</p>
                 </div>
 
                 <div className="d-flex justify-content-between">
                   <p className="small mb-0">Tax</p>
-                  <p className="small mb-0">${order.tax_fee}</p>
+                  <p className="small mb-0">£{order.tax_fee}</p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p className="small mb-0">Discount</p>
-                  <p className="small mb-0">-${order.saved}</p>
+                  <p className="small mb-0">-£{order.saved}</p>
                 </div>
                 <div className="d-flex justify-content-between mt-4">
                   <p className="fw-bold">Total</p>
                   <p className="fw-bold" style={{ color: "#35558a" }}>
-                    ${order.total}
+                    £{order.total}
                   </p>
                 </div>
               </div>
